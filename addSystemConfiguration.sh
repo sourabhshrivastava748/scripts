@@ -45,11 +45,11 @@ function initialize_global_variables() {
 
 # Check if config exists for the tenant
 function system_config_exists() {
-	local tenantCode = $1
-	local systemConfigName = $2
+	local tenantCode=$1
+	local systemConfigName=$2
 
-	local query = "select id from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
-	local query_result = `mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query"`
+	local query="select id from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
+	local query_result=`mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query"`
 
 	echo "*******"
 	echo "query: ${query}"
