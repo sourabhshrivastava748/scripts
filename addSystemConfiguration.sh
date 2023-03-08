@@ -44,31 +44,15 @@ function initialize_global_variables() {
 }
 
 # Check if config exists for the tenant
-function system_config_exists() {
+function get_system_config() {
 	local tenantCode=$1
 	local systemConfigName=$2
 	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
 	
-	if [ -z "$query_result" ]; then
-		echo "No"
-	else 
-		echo "Yes"
-	fi
-
-	# echo "query_result: ${query_result}"
-
-	# IFS=',' read -r -a query_result_array <<< "$query_result"
-	# echo "Elements after splitting: "
-	# for element in "${query_result_array[@]}"
-	# do
-	#     echo "$element"
-	# done
-
-	# local sys_config_id="${query_result_array[0]}"
+	echo $query_result
 }
 
-# Find out product_code of tenant
 function get_product_code() {
 	local tenantCode=$1
 	local query="select * from tenant where code = '$tenantCode';"
@@ -81,6 +65,20 @@ function get_product_code() {
 
 	IFS=',' read -r -a query_result_array <<< "$query_result"
 	echo ${query_result_array[4]}
+}
+
+function get_base_tenant_code() {
+	local baseTenantCode=$(get_product_code "$TENANT_CODE")
+	baseTenantCode="base$(echo "$baseTenantCode" | tr '[:upper:]' '[:lower:]')"
+
+	if [[ "$SERVER_NAME" == "ECloud"* ]]; then
+		suffix=${SERVER_NAME#"ECloud"}
+	elif [[ "$SERVER_NAME" == "Cloud"* ]]; then
+		suffix=${SERVER_NAME#"Cloud"}
+	fi
+	baseTenantCode+=$suffix
+
+	echo ${baseTenantCode}
 }
 
 # Based on product code and server name, get base tenant code
@@ -108,22 +106,14 @@ function get_product_code() {
 eval $1
 initialize_global_variables
 
-if [[ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") == "Yes" ]]; then
+if [ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]; then
 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
 	exit
-fi 
-
-BASE_TENANT_CODE=$(get_product_code "$TENANT_CODE")
-BASE_TENANT_CODE="base$(echo "$BASE_TENANT_CODE" | tr '[:upper:]' '[:lower:]')"
-
-if [[ "$SERVER_NAME" == "ECloud"* ]]; then
-	suffix=${SERVER_NAME#"ECloud"}
-elif [[ "$SERVER_NAME" == "Cloud"* ]]; then
-	suffix=${SERVER_NAME#"Cloud"}
 fi
-BASE_TENANT_CODE+=$suffix
 
-echo "BASE_TENANT_CODE: ${BASE_TENANT_CODE}"
+BASE_TENANT_CODE=$(get_base_tenant_code)
+echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
+
 
 echo "Adding system configuration.. "
 
