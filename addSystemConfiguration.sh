@@ -63,16 +63,16 @@ function system_config_exists() {
 	local tenantCode=$1
 	local systemConfigName=$2
 
-	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
+	local query="select id from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
 	local query_result=`mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query"`
+	local sys_config_id=$(findColumnValueByIndex "$query_result" "1")
+	echo  "sys_config_id: ${sys_config_id}"
 
-	local sys_config_id=$(findColumnValueByIndex "$query_result" "1") 
-
-	echo "*******"
-	echo "query: ${query}"
-	echo "sys_config_id: ${sys_config_id}"
-	echo "query result: ${query_result}"
-	echo "*******"
+	if [[ $sys_config_id == "-1" ]]; then
+		echo "No"
+	else
+		echo "Yes"
+	fi
 }
 
 # Find out product_code of tenant
