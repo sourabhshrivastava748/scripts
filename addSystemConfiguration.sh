@@ -50,23 +50,23 @@ function system_config_exists() {
 
 	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
-	echo "query_result: ${query_result}"
-
-	IFS=',' read -r -a query_result_array <<< "$query_result"
-	echo "Elements after splitting: "
-	for element in "${query_result_array[@]}"
-	do
-	    echo "$element"
-	done
-
-	local sys_config_id="${query_result_array[0]}"
-	echo  "sys_config_id: ${sys_config_id}"
-
-	if [[ $sys_config_id == "-1" ]]; then
+	
+	if [ -z "$query_result" ]; then
 		return 0
-	else
+	else 
 		return 1
 	fi
+
+	# echo "query_result: ${query_result}"
+
+	# IFS=',' read -r -a query_result_array <<< "$query_result"
+	# echo "Elements after splitting: "
+	# for element in "${query_result_array[@]}"
+	# do
+	#     echo "$element"
+	# done
+
+	# local sys_config_id="${query_result_array[0]}"
 }
 
 # Find out product_code of tenant
