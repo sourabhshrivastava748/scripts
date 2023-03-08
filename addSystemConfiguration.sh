@@ -1,7 +1,6 @@
 #!/bin/bash
 
 function initialize_global_variables() {
-	eval $1
 	TENANT_CODE=${inputData[Tenant_Code]}
 	SYSTEM_CONFIGURATION_NAME=${inputData[System_Configuration_Name]}
 	SYSTEM_CONFIGURATION_VALUE=${inputData[System_Configuration_Value]}
@@ -82,6 +81,7 @@ function system_config_exists() {
 
 # ====================== Main Script ============================
 
+eval $1
 initialize_global_variables
 
 system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME"
