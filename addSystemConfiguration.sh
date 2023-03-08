@@ -47,7 +47,6 @@ function initialize_global_variables() {
 function system_config_exists() {
 	local tenantCode=$1
 	local systemConfigName=$2
-
 	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
 	
@@ -70,6 +69,19 @@ function system_config_exists() {
 }
 
 # Find out product_code of tenant
+function get_product_code() {
+	local tenantCode=$1
+	local query="select * from tenant where code = '$tenantCode');"
+	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
+	
+	if [ -z "$query_result" ]; then
+		echo "Invalid tenant code: ${tenantCode}"
+		exit
+	fi
+
+	IFS=',' read -r -a query_result_array <<< "$query_result"
+	echo ${query_result_array[4]}
+}
 
 # Based on product code and server name, get base tenant code
 
@@ -100,6 +112,10 @@ if [[ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") == "Ye
 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
 	exit
 fi 
+
+BASE_TENANT_CODE_PREFIX=$(get_product_code "$TENANT_CODE")
+BASE_TENANT_CODE_PREFIX="base$(echo "$BASE_TENANT_CODE_PREFIX" | tr '[:upper:]' '[:lower:]')"
+echo "BASE_TENANT_CODE_PREFIX: ${BASE_TENANT_CODE_PREFIX}"
 
 echo "Adding system configuration.. "
 
