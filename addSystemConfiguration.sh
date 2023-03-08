@@ -50,7 +50,7 @@ function get_system_config() {
 	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
 	
-	echo $query_result
+	echo ${query_result}
 }
 
 function get_product_code() {
@@ -106,7 +106,7 @@ function get_base_tenant_code() {
 eval $1
 initialize_global_variables
 
-if [ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]; then
+if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
 	exit
 fi
