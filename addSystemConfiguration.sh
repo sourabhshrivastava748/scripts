@@ -43,16 +43,34 @@ function initialize_global_variables() {
 	echo
 }
 
+function findColumnValueByIndex() {
+	l=0
+	RES=-1
+	for it in $1
+	do
+		if [[ $l -eq $2 ]]
+		then
+			let RES=$it
+			break;
+		fi
+		let l++
+	done
+	echo "$RES"
+}
+
 # Check if config exists for the tenant
 function system_config_exists() {
 	local tenantCode=$1
 	local systemConfigName=$2
 
-	local query="select id from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
+	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
 	local query_result=`mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query"`
+
+	local sys_config_id=$(findColumnValueByIndex "$query_result" "1") 
 
 	echo "*******"
 	echo "query: ${query}"
+	echo "sys_config_id: ${sys_config_id}"
 	echo "query result: ${query_result}"
 	echo "*******"
 }
