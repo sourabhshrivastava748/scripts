@@ -43,21 +43,6 @@ function initialize_global_variables() {
 	echo
 }
 
-function findColumnValueByIndex() {
-	l=0
-	RES=-1
-	for it in $1
-	do
-		if [[ $l -eq $2 ]]
-		then
-			let RES=$it
-			break;
-		fi
-		let l++
-	done
-	echo "$RES"
-}
-
 # Check if config exists for the tenant
 function system_config_exists() {
 	local tenantCode=$1
@@ -74,13 +59,13 @@ function system_config_exists() {
 	    echo "$element"
 	done
 
-	local sys_config_id="${array[0]}"
+	local sys_config_id="${query_result_array[0]}"
 	echo  "sys_config_id: ${sys_config_id}"
 
 	if [[ $sys_config_id == "-1" ]]; then
-		echo "No"
+		return 0
 	else
-		echo "Yes"
+		return 1
 	fi
 }
 
@@ -111,7 +96,7 @@ function system_config_exists() {
 eval $1
 initialize_global_variables
 
-if [[ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") == "Yes" ]]; then
+if [ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]; then
 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
 	exit
 fi 
