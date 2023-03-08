@@ -57,11 +57,6 @@ function get_tenant() {
 	local query="select * from tenant where code = '$tenantCode';"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
 	
-	if [[ -z "$query_result" ]]; then
-		echo "Invalid tenant code: ${tenantCode}"
-		exit
-	fi
-
 	echo ${query_result}
 }
 
@@ -157,7 +152,11 @@ eval $1
 initialize_global_variables
 
 
-TENANT=$(get_tenant ${TENANT_CODE})
+TENANT=$(get_tenant "${TENANT_CODE}")
+if [[ -z $TENANT ]]; then
+	echo "Invalid tenant code: ${tenantCode}"
+	exit
+fi
 IFS=',' read -r -a tenant_array <<< "$TENANT"
 TENANT_ID=${tenant_array[0]}
 TENANT_PRODUCT_CODE=${tenant_array[4]}
