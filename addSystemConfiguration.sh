@@ -64,8 +64,17 @@ function system_config_exists() {
 	local systemConfigName=$2
 
 	local query="select id from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
-	local query_result=`mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query"`
-	local sys_config_id=$(findColumnValueByIndex "$query_result" "1")
+	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
+	echo "query_result: ${query_result}"
+
+	IFS=',' read -r -a query_result_array <<< "$query_result"
+	echo "Elements after splitting: "
+	for element in "${array[@]}"
+	do
+	    echo "$element"
+	done
+	
+	local sys_config_id="${array[0]}"
 	echo  "sys_config_id: ${sys_config_id}"
 
 	if [[ $sys_config_id == "-1" ]]; then
