@@ -71,7 +71,7 @@ function system_config_exists() {
 # Find out product_code of tenant
 function get_product_code() {
 	local tenantCode=$1
-	local query="select * from tenant where code = '$tenantCode');"
+	local query="select * from tenant where code = '$tenantCode';"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
 	
 	if [ -z "$query_result" ]; then
