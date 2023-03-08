@@ -69,7 +69,7 @@ function system_config_exists() {
 
 	IFS=',' read -r -a query_result_array <<< "$query_result"
 	echo "Elements after splitting: "
-	for element in "${array[@]}"
+	for element in "${query_result_array[@]}"
 	do
 	    echo "$element"
 	done
