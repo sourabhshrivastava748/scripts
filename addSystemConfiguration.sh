@@ -113,16 +113,15 @@ if [[ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") == "Ye
 	exit
 fi 
 
-prefix=$(get_product_code "$TENANT_CODE")
-prefix="base$(echo "$prefix" | tr '[:upper:]' '[:lower:]')"
+BASE_TENANT_CODE=$(get_product_code "$TENANT_CODE")
+BASE_TENANT_CODE="base$(echo "$BASE_TENANT_CODE" | tr '[:upper:]' '[:lower:]')"
 
 if [[ "$SERVER_NAME" == "ECloud"* ]]; then
 	suffix=${SERVER_NAME#"ECloud"}
-	BASE_TENANT_CODE=${$prefix$suffix}
 elif [[ "$SERVER_NAME" == "Cloud"* ]]; then
 	suffix=${SERVER_NAME#"Cloud"}
-	BASE_TENANT_CODE=${$prefix$suffix}
 fi
+BASE_TENANT_CODE+=$suffix
 
 echo "BASE_TENANT_CODE: ${BASE_TENANT_CODE}"
 
