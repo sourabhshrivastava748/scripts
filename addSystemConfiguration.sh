@@ -52,9 +52,9 @@ function system_config_exists() {
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
 	
 	if [ -z "$query_result" ]; then
-		return 0
+		echo "No"
 	else 
-		return 1
+		echo "Yes"
 	fi
 
 	# echo "query_result: ${query_result}"
@@ -96,7 +96,7 @@ function system_config_exists() {
 eval $1
 initialize_global_variables
 
-if [ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]; then
+if [[ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") == "Yes" ]]; then
 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
 	exit
 fi 
