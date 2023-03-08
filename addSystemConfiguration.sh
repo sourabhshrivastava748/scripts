@@ -43,7 +43,6 @@ function initialize_global_variables() {
 	echo
 }
 
-# Check if config exists for the tenant
 function get_system_config() {
 	local tenantCode=$1
 	local systemConfigName=$2
@@ -53,7 +52,7 @@ function get_system_config() {
 	echo ${query_result}
 }
 
-function get_product_code() {
+function get_tenant() {
 	local tenantCode=$1
 	local query="select * from tenant where code = '$tenantCode';"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
@@ -63,12 +62,11 @@ function get_product_code() {
 		exit
 	fi
 
-	IFS=',' read -r -a query_result_array <<< "$query_result"
-	echo ${query_result_array[4]}
+	echo ${query_result}
 }
 
 function get_base_tenant_code() {
-	local baseTenantCode=$(get_product_code "$TENANT_CODE")
+	local baseTenantCode=${TENANT_PRODUCT_CODE}
 	baseTenantCode="base$(echo "$baseTenantCode" | tr '[:upper:]' '[:lower:]')"
 
 	if [[ "$SERVER_NAME" == "ECloud"* ]]; then
@@ -81,19 +79,71 @@ function get_base_tenant_code() {
 	echo ${baseTenantCode}
 }
 
-# Based on product code and server name, get base tenant code
+function validate_config_value() {
+	if [[ -n ${SYSTEM_CONFIGURATION_VALUE} ]]; then
+		local configType=$1
+		if [[ ${configType} == "checkbox" ]]; then
+			if [[ ${SYSTEM_CONFIGURATION_VALUE} == "true" || ${SYSTEM_CONFIGURATION_VALUE} == "false" ]]; then
+				return
+			else
+				echo "Invalid config value. The config type is checkbox, hence the value can be either true or false"
+				exit
+			fi
+		fi
+	fi
+}
 
-# Get system config from base tenant
+function build_insert_query() {
+	INSERT_QUERY="insert ignore into system_configuration select null,"
 
-# If config exist 
-	# build system config query
-	# insert system config 
-# Else
-	# exit with message "Config doesn't exists for base tenant: "
+	if [[ ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[2]} == "NULL" ]]; then
+		echo "Tenant level config"
+		INSERT_QUERY+="${TENANT_ID}-${SYSTEM_CONFIGURATION_NAME},null,"
+	else
+		echo "Facility level config"
+	fi
 
-# Success message
+	# tenant_id
+	INSERT_QUERY+="${TENANT_ID},"
 
-# Mail trigger
+	# name
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[4]},"
+
+	# display_name
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[5]},"
+
+	# value
+	if [[ -n ${SYSTEM_CONFIGURATION_VALUE} ]]; then
+		INSERT_QUERY+="${SYSTEM_CONFIGURATION_VALUE},"
+	else
+		INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[6]},"
+	fi
+
+	# type
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[7]},"
+	validate_config_value ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[7]}
+
+	# hidden
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[8]},"
+
+	# condition_expression
+	if [[ -n ${CONDITION_EXPRESSION} ]]; then
+		INSERT_QUERY+="${CONDITION_EXPRESSION},"
+	else
+		INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[9]},"
+	fi
+
+	# access_resource_name
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[10]},"
+	# group_name
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[11]},"
+	# sequence
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[12]},"
+	# created
+	INSERT_QUERY+="now(),"
+	# updated
+	INSERT_QUERY+="now();"
+}
 
 
 
@@ -106,20 +156,40 @@ function get_base_tenant_code() {
 eval $1
 initialize_global_variables
 
-if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
-	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
-	exit
-fi
+
+TENANT=$(get_tenant ${TENANT_CODE})
+IFS=',' read -r -a tenant_array <<< "$TENANT"
+TENANT_ID=${tenant_array[0]}
+TENANT_PRODUCT_CODE=${tenant_array[4]}
+echo "TENANT_ID: ${TENANT_ID}"
+echo "TENANT_PRODUCT_CODE: ${TENANT_PRODUCT_CODE}"
+
+# if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
+# 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
+# 	exit
+# fi
 
 BASE_TENANT_CODE=$(get_base_tenant_code)
 echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
 
+BASE_TENANT_SYSTEM_CONFIG=$(get_system_config "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
+if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
+	echo "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE} . Invalid system configuration"
+	exit
+fi
+
+IFS=',' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
+echo 
+
+
+build_insert_query
+
+
+echo "-----------------------"
+echo $INSERT_QUERY
+echo "-----------------------"
 
 echo "Adding system configuration.. "
-
-
-
-
 
 
 
