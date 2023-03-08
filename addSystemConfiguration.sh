@@ -102,7 +102,13 @@ function system_config_exists() {
 eval $1
 initialize_global_variables
 
-system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME"
+if [[ $(system_config_exists "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") == "Yes" ]]; then
+	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
+	exit
+fi 
+
+echo "Adding system configuration.. "
+
 
 
 
