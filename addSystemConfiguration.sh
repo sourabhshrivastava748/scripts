@@ -99,11 +99,10 @@ function validate_config_value() {
 function build_insert_query() {
 	INSERT_QUERY="insert ignore into system_configuration select null, "
 
-	if [[ ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[2]} == "NULL" ]]; then
-		echo "Tenant level config"
+	if [[ ${SYSTEM_CONFIG_LEVEL} == "Tenant" ]]; then
 		INSERT_QUERY+="\"${TENANT_ID}-${SYSTEM_CONFIGURATION_NAME}\", null, "
 	else
-		echo "Facility level config"
+		INSERT_QUERY+="concat(\"${TENANT_ID}-\",f.id,\"-${SYSTEM_CONFIGURATION_NAME}\", f.id, "
 	fi
 
 	# tenant_id
@@ -143,7 +142,13 @@ function build_insert_query() {
 	# sequence
 	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[12]}, "
 	# created, updated
-	INSERT_QUERY+="now(), now();"
+	INSERT_QUERY+="now(), now()"
+
+	if [[ ${SYSTEM_CONFIG_LEVEL} == "Tenant" ]]; then
+		INSERT_QUERY+=";"
+	else
+		INSERT_QUERY+=" from facility f, party p where p.id = f.id and p.tenant_id = ${TENANT_ID};"
+	fi
 }
 
 
@@ -170,6 +175,11 @@ TENANT_PRODUCT_CODE=${tenant_array[4]}
 echo "TENANT_ID: ${TENANT_ID}"
 echo "TENANT_PRODUCT_CODE: ${TENANT_PRODUCT_CODE}"
 
+# if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
+# 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
+# 	exit
+# fi
+
 BASE_TENANT_CODE=$(get_base_tenant_code)
 echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
 
@@ -182,6 +192,13 @@ fi
 prevIFS=$IFS
 IFS=';' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
 IFS=$prevIFS
+
+if [[ ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[2]} == "NULL" ]]; then
+	SYSTEM_CONFIG_LEVEL="Tenant"
+else
+	SYSTEM_CONFIG_LEVEL="Facility"
+fi
+echo "System config level: ${SYSTEM_CONFIG_LEVEL}"
 
 echo 
 
