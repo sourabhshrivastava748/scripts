@@ -123,7 +123,7 @@ function get_base_tennant_code_and_config() {
 
 	BASE_TENANT_SYSTEM_CONFIG=$(get_system_config "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
 	if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
-		exit_script false "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE} . Invalid system configuration"
+		exit_script false "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE}. Invalid system configuration"
 	fi
 
 	prevIFS=$IFS
@@ -207,6 +207,24 @@ function build_insert_query() {
 	else
 		INSERT_QUERY+=" from facility f, party p where p.id = f.id and p.tenant_id = ${TENANT_ID};"
 	fi
+
+	echo $INSERT_QUERY
+}
+
+function execute_insert_query() {
+	echo "Adding system configuration.. "
+
+
+}
+
+function generate_mail() {
+	MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
+	MAIL_SUBJECT="Job AddSystemConfiguration is executed for Tenant: $TENANT_CODE, `date +'%Y-%m-%d'`"
+	MAIL_CONTENT="System configuration ${SYSTEM_CONFIGURATION_NAME} was added for tenant ${TENANT_CODE}. This build was triggered by: $BUILD_TRIGGER_BY"
+	
+	# echo $MAILING_CMD | mutt -s "Job AddSystemConfiguration is executed for Tenant: $TENANT_CODE, `date +'%Y-%m-%d'`" -- sourabh.shrivastava@unicommerce.com,oncall@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,richard@unicommerce.com,shashank@unicommerce.com,alpha@unicommerce.com,prateek.mahajan@unicommerce.com
+	
+	echo $MAIL_CONTENT | mutt -s $MAIL_SUBJECT -- $MAIL_RECIPIENTS
 }
 
 # ============================== Runner Script ===================================
@@ -223,16 +241,13 @@ get_base_tennant_code_and_config
 
 build_insert_query
 
+execute_insert_query
 
-echo "-----------------------"
-echo $INSERT_QUERY
-echo "-----------------------"
-
-echo "Adding system configuration.. "
+generate_mail
 
 exit_script true "System config ${SYSTEM_CONFIGURATION_NAME} added for tenant ${TENANT_CODE}"
 
 
-
+# ================================================================================
 
 
