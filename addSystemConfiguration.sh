@@ -105,8 +105,7 @@ function check_system_config_exists() {
 function get_tenant_id_and_product_code() {
 	TENANT=$(get_tenant "$TENANT_CODE")
 	if [[ -z $TENANT ]]; then
-		echo "Invalid tenant code: ${tenantCode}"
-		exit
+		exit_script false "Invalid tenant code: ${tenantCode}"
 	fi
 
 	prevIFS=$IFS
@@ -151,8 +150,7 @@ function validate_config_value() {
 			if [[ ${SYSTEM_CONFIGURATION_VALUE} == "true" || ${SYSTEM_CONFIGURATION_VALUE} == "false" ]]; then
 				return
 			else
-				echo "Invalid config value. The config type is checkbox, hence the value can be either true or false"
-				exit
+				exit_script false "Invalid config value. The config type is checkbox, hence the value can be either true or false"
 			fi
 		fi
 	fi
