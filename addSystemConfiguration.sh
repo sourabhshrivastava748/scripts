@@ -49,7 +49,7 @@ function get_system_config() {
 	local tenantCode=$1
 	local systemConfigName=$2
 	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
-	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
+	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ';'`
 	
 	echo ${query_result}
 }
@@ -57,9 +57,9 @@ function get_system_config() {
 function get_tenant() {
 	local tenantCode=$1
 	local query="select * from tenant where code = '$tenantCode';"
-	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
+	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ';'`
 	
-	echo -e ${query_result}
+	echo ${query_result}
 }
 
 function get_base_tenant_code() {
@@ -155,29 +155,30 @@ if [[ -z $TENANT ]]; then
 	echo "Invalid tenant code: ${tenantCode}"
 	exit
 fi
-IFS=',' read -r -a tenant_array <<< "$TENANT"
+IFS=';' read -r -a tenant_array <<< "$TENANT"
 TENANT_ID=${tenant_array[0]}
 TENANT_PRODUCT_CODE=${tenant_array[4]}
 echo "TENANT_ID: ${TENANT_ID}"
 echo "TENANT_PRODUCT_CODE: ${TENANT_PRODUCT_CODE}"
 
-tc="aei"
-qu="select * from tenant where code = '$tc';"
-# qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu" | tr '\t' ','`
-qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu"`
-echo "----"
-echo ${qr} | sed 's/	/;/g'
-echo "----"
-qrs=$(echo ${qr} | sed 's/	/;/g')
-echo -e ${qrs}
-qrs+=",hello,world"
-echo -e ${qrs}
+# -----DEBUG
+# tc="aei"
+# qu="select * from tenant where code = '$tc';"
+# # qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu" | tr '\t' ','`
+# qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu"`
+# echo "----"
+# echo ${qr} | sed 's/	/;/g'
+# echo "----"
+# qrs=$(echo ${qr} | sed 's/	/;/g')
+# echo -e ${qrs}
+# qrs+=",hello,world"
+# echo -e ${qrs}
 
-testtemp='aa,bb,cc,dd,ee'
-echo ${testtemp}
+# testtemp='aa,bb,cc,dd,ee'
+# echo ${testtemp}
 
-testtemp+="tt,yy"
-echo ${testtemp}
+# testtemp+="tt,yy"
+# echo ${testtemp}
 
 # if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
 # 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
@@ -193,7 +194,7 @@ if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
 	exit
 fi
 
-IFS=',' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
+IFS=';' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
 echo 
 
 
