@@ -1,6 +1,9 @@
 #!/bin/bash
 
 function initialize_global_variables() {
+	# save value of IFS
+	prevIFS=$IFS
+
 	TENANT_CODE=${inputData[Tenant_Code]}
 	SYSTEM_CONFIGURATION_NAME=${inputData[System_Configuration_Name]}
 	SYSTEM_CONFIGURATION_VALUE=${inputData[System_Configuration_Value]}
@@ -40,7 +43,10 @@ function initialize_global_variables() {
 	DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName:'$SERVER_NAME'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
 	echo DB_HOST : $DB_HOST
 
-	echo
+	# restore old value of IFS
+	IFS=$prevIFS
+
+	echo; echo
 }
 
 # ============================== Helper functions ===================================
@@ -91,11 +97,11 @@ function validate_config_value() {
 }
 
 function build_insert_query() {
-	INSERT_QUERY="insert ignore into system_configuration select null\, "
+	INSERT_QUERY="insert ignore into system_configuration select null, "
 
 	if [[ ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[2]} == "NULL" ]]; then
 		echo "Tenant level config"
-		INSERT_QUERY+="\"${TENANT_ID}-${SYSTEM_CONFIGURATION_NAME}\"\, null\, "
+		INSERT_QUERY+="\"${TENANT_ID}-${SYSTEM_CONFIGURATION_NAME}\", null, "
 	else
 		echo "Facility level config"
 	fi
@@ -104,42 +110,40 @@ function build_insert_query() {
 	INSERT_QUERY+="${TENANT_ID}, "
 
 	# name
-	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[4]}\"\, "
+	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[4]}\", "
 
 	# display_name
-	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[5]}\"\, "
+	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[5]}\", "
 
 	# value
 	if [[ -n ${SYSTEM_CONFIGURATION_VALUE} ]]; then
-		INSERT_QUERY+="\"${SYSTEM_CONFIGURATION_VALUE}\"\, "
+		INSERT_QUERY+="\"${SYSTEM_CONFIGURATION_VALUE}\", "
 	else
-		INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[6]}\"\, "
+		INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[6]}\", "
 	fi
 
 	# type
-	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[7]}\"\, "
+	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[7]}\", "
 	validate_config_value ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[7]}
 
 	# hidden
-	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[8]}\, "
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[8]}, "
 
 	# condition_expression
 	if [[ -n ${CONDITION_EXPRESSION} ]]; then
-		INSERT_QUERY+="\"${CONDITION_EXPRESSION}\"\, "
+		INSERT_QUERY+="\"${CONDITION_EXPRESSION}\", "
 	else
-		INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[9]}\"\, "
+		INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[9]}\", "
 	fi
 
 	# access_resource_name
-	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[10]}\"\, "
+	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[10]}\", "
 	# group_name
-	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[11]}\"\, "
+	INSERT_QUERY+="\"${BASE_TENANT_SYSTEM_CONFIG_ARRAY[11]}\", "
 	# sequence
-	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[12]}\, "
-	# created
-	INSERT_QUERY+="now()\, "
-	# updated
-	INSERT_QUERY+="now();"
+	INSERT_QUERY+="${BASE_TENANT_SYSTEM_CONFIG_ARRAY[12]}, "
+	# created, updated
+	INSERT_QUERY+="now(), now();"
 }
 
 
@@ -149,12 +153,17 @@ function build_insert_query() {
 eval $1
 initialize_global_variables
 
+
+
 TENANT=$(get_tenant "$TENANT_CODE")
 if [[ -z $TENANT ]]; then
 	echo "Invalid tenant code: ${tenantCode}"
 	exit
 fi
+
+prevIFS=$IFS
 IFS=';' read -r -a tenant_array <<< "$TENANT"
+IFS=$prevIFS
 
 TENANT_ID=${tenant_array[0]}
 TENANT_PRODUCT_CODE=${tenant_array[4]}
@@ -170,7 +179,10 @@ if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
 	exit
 fi
 
+prevIFS=$IFS
 IFS=';' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
+IFS=$prevIFS
+
 echo 
 
 
