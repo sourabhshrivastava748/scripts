@@ -66,7 +66,7 @@ function exit_script() {
 function get_system_config() {
 	local tenantCode=$1
 	local systemConfigName=$2
-	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode');"
+	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode') limit 1;"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ';'`
 	
 	echo ${query_result}
@@ -217,6 +217,7 @@ function build_insert_query() {
 
 function execute_insert_query() {
 	echo "Adding system configuration.. "
+	mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$INSERT_QUERY"
 }
 
 function generate_mail() {
