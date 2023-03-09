@@ -170,6 +170,8 @@ echo ${qr} | sed 's/	/,/g'
 echo "----"
 qrs=$(echo ${qr} | sed 's/	/,/g')
 echo ${qrs}
+qrs+=",hello,world"
+echo ${qrs}
 
 # if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
 # 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
