@@ -162,8 +162,8 @@ echo "TENANT_ID: ${TENANT_ID}"
 echo "TENANT_PRODUCT_CODE: ${TENANT_PRODUCT_CODE}"
 
 tc="aei"
-q="select * from tenant where code = '$tc';"
-qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
+qu="select * from tenant where code = '$tc';"
+qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu" | tr '\t' ','`
 echo ${qr}
 
 # if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
