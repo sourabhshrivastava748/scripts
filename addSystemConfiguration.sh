@@ -43,6 +43,8 @@ function initialize_global_variables() {
 	echo
 }
 
+# ============================== Helper functions ===================================
+
 function get_system_config() {
 	local tenantCode=$1
 	local systemConfigName=$2
@@ -142,17 +144,13 @@ function build_insert_query() {
 
 
 
-
-
-
-
-# ====================== Main Script ============================
+# ============================== Runner Script ===================================
 
 eval $1
 initialize_global_variables
 
 
-TENANT=$(get_tenant "${TENANT_CODE}")
+TENANT=$(get_tenant "$TENANT_CODE")
 if [[ -z $TENANT ]]; then
 	echo "Invalid tenant code: ${tenantCode}"
 	exit
@@ -170,6 +168,12 @@ echo "TENANT_PRODUCT_CODE: ${TENANT_PRODUCT_CODE}"
 
 BASE_TENANT_CODE=$(get_base_tenant_code)
 echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
+
+tc="aei"
+q="select * from tenant where code = '$tc';"
+qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
+
+echo ${qr}
 
 BASE_TENANT_SYSTEM_CONFIG=$(get_system_config "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
 if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
