@@ -59,7 +59,7 @@ function get_tenant() {
 	local query="select * from tenant where code = '$tenantCode';"
 	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$query" | tr '\t' ','`
 	
-	echo ${query_result}
+	echo -e ${query_result}
 }
 
 function get_base_tenant_code() {
@@ -169,9 +169,9 @@ echo "----"
 echo ${qr} | sed 's/	/;/g'
 echo "----"
 qrs=$(echo ${qr} | sed 's/	/;/g')
-echo ${qrs}
+echo -e ${qrs}
 qrs+=",hello,world"
-echo ${qrs}
+echo -e ${qrs}
 
 testtemp='aa,bb,cc,dd,ee'
 echo ${testtemp}
