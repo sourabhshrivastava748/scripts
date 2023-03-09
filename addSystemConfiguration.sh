@@ -166,9 +166,9 @@ qu="select * from tenant where code = '$tc';"
 # qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu" | tr '\t' ','`
 qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu"`
 echo "----"
-echo ${qr} | tr '\t' ','
+echo ${qr} | sed 's/	/,/g'
 echo "----"
-qrs=$(echo ${qr} | tr '\t' ',')
+qrs=$(echo ${qr} | sed 's/	/,/g')
 echo ${qrs}
 
 # if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
