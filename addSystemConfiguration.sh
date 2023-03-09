@@ -97,6 +97,8 @@ function get_base_tenant_code() {
 function check_system_config_exists() {
 	if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
 		exit_script false "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
+	else 
+		echo "Config doesn't exists for ${TENANT_CODE}"
 	fi
 }
 
@@ -125,6 +127,8 @@ function get_base_tennant_code_and_config() {
 	if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
 		exit_script false "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE}. Invalid system configuration"
 	fi
+
+	echo "BASE_TENANT_SYSTEM_CONFIG: ${BASE_TENANT_SYSTEM_CONFIG}"
 
 	prevIFS=$IFS
 	IFS=';' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
@@ -213,8 +217,6 @@ function build_insert_query() {
 
 function execute_insert_query() {
 	echo "Adding system configuration.. "
-
-
 }
 
 function generate_mail() {
@@ -224,7 +226,7 @@ function generate_mail() {
 	
 	# echo $MAILING_CMD | mutt -s "Job AddSystemConfiguration is executed for Tenant: $TENANT_CODE, `date +'%Y-%m-%d'`" -- sourabh.shrivastava@unicommerce.com,oncall@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,richard@unicommerce.com,shashank@unicommerce.com,alpha@unicommerce.com,prateek.mahajan@unicommerce.com
 	
-	echo $MAIL_CONTENT | mutt -s $MAIL_SUBJECT -- $MAIL_RECIPIENTS
+	echo ${MAIL_CONTENT} | mutt -s "${MAIL_SUBJECT}" -- "${MAIL_RECIPIENTS}"
 }
 
 # ============================== Runner Script ===================================
@@ -246,7 +248,6 @@ execute_insert_query
 generate_mail
 
 exit_script true "System config ${SYSTEM_CONFIGURATION_NAME} added for tenant ${TENANT_CODE}"
-
 
 # ================================================================================
 
