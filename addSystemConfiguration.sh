@@ -164,7 +164,7 @@ function build_insert_query() {
 	if [[ ${SYSTEM_CONFIG_LEVEL} == "Tenant" ]]; then
 		INSERT_QUERY+="\"${TENANT_ID}-${SYSTEM_CONFIGURATION_NAME}\", null, "
 	else
-		INSERT_QUERY+="concat(\"${TENANT_ID}-\",f.id,\"-${SYSTEM_CONFIGURATION_NAME}\", f.id, "
+		INSERT_QUERY+="concat(\"${TENANT_ID}-\",f.id,\"-${SYSTEM_CONFIGURATION_NAME}\"), f.id, "
 	fi
 
 	# tenant_id
