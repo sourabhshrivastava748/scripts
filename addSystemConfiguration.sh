@@ -123,8 +123,7 @@ function get_base_tennant_code_and_config() {
 
 	BASE_TENANT_SYSTEM_CONFIG=$(get_system_config "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
 	if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
-		echo "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE} . Invalid system configuration"
-		exit
+		exit_script false "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE} . Invalid system configuration"
 	fi
 
 	prevIFS=$IFS
