@@ -166,12 +166,18 @@ qu="select * from tenant where code = '$tc';"
 # qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu" | tr '\t' ','`
 qr=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$qu"`
 echo "----"
-echo ${qr} | sed 's/	/,/g'
+echo ${qr} | sed 's/	/;/g'
 echo "----"
-qrs=$(echo ${qr} | sed 's/	/,/g')
+qrs=$(echo ${qr} | sed 's/	/;/g')
 echo ${qrs}
 qrs+=",hello,world"
 echo ${qrs}
+
+testtemp='aa,bb,cc,dd,ee'
+echo ${testtemp}
+
+testtemp+="tt,yy"
+echo ${testtemp}
 
 # if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
 # 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
