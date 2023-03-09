@@ -51,6 +51,18 @@ function initialize_global_variables() {
 
 # ============================== Helper functions ===================================
 
+function exit_script() {
+	local success=$1
+	local msg=$2
+
+	if [ "$success" = true ] ; then
+	    echo "Result: SUCCESS. ${msg}"
+	else
+		echo "Result: FAILURE. ${msg}"
+	fi
+	exit
+}
+
 function get_system_config() {
 	local tenantCode=$1
 	local systemConfigName=$2
@@ -196,18 +208,6 @@ function build_insert_query() {
 	else
 		INSERT_QUERY+=" from facility f, party p where p.id = f.id and p.tenant_id = ${TENANT_ID};"
 	fi
-}
-
-function exit_script() {
-	local success=$1
-	local msg=$2
-
-	if [ "$success" = true ] ; then
-	    echo "Result: SUCCESS. ${msg}"
-	else
-		echo "Result: FAILURE. ${msg}"
-	fi
-	exit
 }
 
 # ============================== Runner Script ===================================
