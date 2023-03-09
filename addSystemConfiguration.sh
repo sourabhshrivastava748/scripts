@@ -82,6 +82,54 @@ function get_base_tenant_code() {
 	echo ${baseTenantCode}
 }
 
+function check_system_config_exists() {
+	if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
+		echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
+		exit
+	fi
+}
+
+function get_tenant_id_and_product_code() {
+	TENANT=$(get_tenant "$TENANT_CODE")
+	if [[ -z $TENANT ]]; then
+		echo "Invalid tenant code: ${tenantCode}"
+		exit
+	fi
+
+	prevIFS=$IFS
+	IFS=';' read -r -a tenant_array <<< "$TENANT"
+	IFS=$prevIFS
+
+	TENANT_ID=${tenant_array[0]}
+	TENANT_PRODUCT_CODE=${tenant_array[4]}
+	echo "TENANT_ID: ${TENANT_ID}"
+	echo "TENANT_PRODUCT_CODE: ${TENANT_PRODUCT_CODE}"
+}
+
+function get_base_tennant_code_and_config() {
+	BASE_TENANT_CODE=$(get_base_tenant_code)
+	echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
+
+	BASE_TENANT_SYSTEM_CONFIG=$(get_system_config "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
+	if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
+		echo "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE} . Invalid system configuration"
+		exit
+	fi
+
+	prevIFS=$IFS
+	IFS=';' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
+	IFS=$prevIFS
+
+	if [[ ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[2]} == "NULL" ]]; then
+		SYSTEM_CONFIG_LEVEL="Tenant"
+	else
+		SYSTEM_CONFIG_LEVEL="Facility"
+	fi
+	echo "System config level: ${SYSTEM_CONFIG_LEVEL}"
+
+	echo 
+}
+
 function validate_config_value() {
 	if [[ -n ${SYSTEM_CONFIGURATION_VALUE} ]]; then
 		local configType=$1
@@ -151,57 +199,29 @@ function build_insert_query() {
 	fi
 }
 
+function exit_script() {
+	local success=$1
+	local msg=$2
 
+	if [ "$success" = true ] ; then
+	    echo "Result: SUCCESS. ${msg}"
+	else
+		echo "Result: FAILURE. ${msg}"
+	fi
+	exit
+}
 
 # ============================== Runner Script ===================================
 
 eval $1
+
 initialize_global_variables
 
+check_system_config_exists
 
+get_tenant_id_and_product_code
 
-TENANT=$(get_tenant "$TENANT_CODE")
-if [[ -z $TENANT ]]; then
-	echo "Invalid tenant code: ${tenantCode}"
-	exit
-fi
-
-prevIFS=$IFS
-IFS=';' read -r -a tenant_array <<< "$TENANT"
-IFS=$prevIFS
-
-TENANT_ID=${tenant_array[0]}
-TENANT_PRODUCT_CODE=${tenant_array[4]}
-echo "TENANT_ID: ${TENANT_ID}"
-echo "TENANT_PRODUCT_CODE: ${TENANT_PRODUCT_CODE}"
-
-# if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
-# 	echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
-# 	exit
-# fi
-
-BASE_TENANT_CODE=$(get_base_tenant_code)
-echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
-
-BASE_TENANT_SYSTEM_CONFIG=$(get_system_config "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
-if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
-	echo "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE} . Invalid system configuration"
-	exit
-fi
-
-prevIFS=$IFS
-IFS=';' read -r -a BASE_TENANT_SYSTEM_CONFIG_ARRAY <<< "$BASE_TENANT_SYSTEM_CONFIG"
-IFS=$prevIFS
-
-if [[ ${BASE_TENANT_SYSTEM_CONFIG_ARRAY[2]} == "NULL" ]]; then
-	SYSTEM_CONFIG_LEVEL="Tenant"
-else
-	SYSTEM_CONFIG_LEVEL="Facility"
-fi
-echo "System config level: ${SYSTEM_CONFIG_LEVEL}"
-
-echo 
-
+get_base_tennant_code_and_config
 
 build_insert_query
 
@@ -212,7 +232,7 @@ echo "-----------------------"
 
 echo "Adding system configuration.. "
 
-
+exit_script true "System config ${SYSTEM_CONFIGURATION_NAME} added for tenant ${TENANT_CODE}"
 
 
 
