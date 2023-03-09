@@ -84,8 +84,7 @@ function get_base_tenant_code() {
 
 function check_system_config_exists() {
 	if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
-		echo "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
-		exit
+		exit_script false "System config ${SYSTEM_CONFIGURATION_NAME} already exists for the tenant ${TENANT_CODE}"
 	fi
 }
 
