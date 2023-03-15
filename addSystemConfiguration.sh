@@ -103,7 +103,7 @@ function get_base_tenant_code() {
 		# Dedicated server - use baseenterprise1 as base tenant
 		echo "Dedicated server: ${SERVER_NAME}"
 		suffix=1
-		
+
 		BASE_TENANT_DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName: 'ECloud1'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
 		
 		echo BASE_TENANT_DB_HOST : $BASE_TENANT_DB_HOST
@@ -237,8 +237,42 @@ function execute_insert_query() {
 	mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST uniware -e "$INSERT_QUERY"
 }
 
+function reload_cache(){
+	TECHSUPPORT_PASSWORD=`mongo --host $MONGO_HOST uniware --eval  "db.getMongo().setSlaveOk();db.tenantProfile.find({tenantCode:'$TENANT_CODE'}).forEach(function(doc){print(doc.techSupportPassword);})" |grep -v -e "MongoDB shell" | tail -1`
+	echo TECHSUPPORT_PASSWORD : $TECHSUPPORT_PASSWORD
+
+	if [[ -z ${TECHSUPPORT_PASSWORD} ]]; then
+		echo "Tech support password is null"
+		exit_script false "Tech support password is null"
+	fi
+
+	ACCESS_URL=`mongo --host $MONGO_HOST uniware --eval  "db.getMongo().setSecondaryOk();db.tenantProfile.find({tenantCode:'$TENANT_CODE'}).forEach(function(doc){print(doc.accessUrl);})" |grep -v -e "MongoDB shell" | tail -1`
+	echo ACCESS_URL : $ACCESS_URL
+	echo starting cache reload
+	SOAP_URL="https://$ACCESS_URL/services/soap/?version=1.9"
+	echo SOAP URL : $SOAP_URL
+    curl --location --request POST $SOAP_URL \
+            --header 'Content-Type: text/xml' \
+            -d '<soapenv:Envelope xmlns:ser="http://uniware.unicommerce.com/services/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+              <soapenv:Header>
+                <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                  <wsse:UsernameToken wsu:Id="UsernameToken-1">
+                    <wsse:Username>techsupport@unicommerce.com</wsse:Username>
+                    <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">'"$TECHSUPPORT_PASSWORD"'</wsse:Password>
+                  </wsse:UsernameToken>
+                </wsse:Security>
+              </soapenv:Header>
+              <soapenv:Body>
+                <ReloadConfigurationRequest xmlns="http://uniware.unicommerce.com/services/">
+                  <Type>jobs</Type>
+                </ReloadConfigurationRequest>
+              </soapenv:Body>
+            </soapenv:Envelope>'
+    echo "Cache Reloaded"
+}
+
 function generate_mail() {
-	MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
+	MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com,arindam.dubey@unicommerce.com"
 	MAIL_SUBJECT="Job AddSystemConfiguration is executed for Tenant: $TENANT_CODE, `date +'%Y-%m-%d'`"
 	MAIL_CONTENT="System configuration ${SYSTEM_CONFIGURATION_NAME} was added for tenant ${TENANT_CODE}. This build was triggered by: $BUILD_TRIGGER_BY"
 	
@@ -263,7 +297,12 @@ build_insert_query
 
 execute_insert_query
 
+reload_cache
+
 generate_mail
+
+# Weekly_report_trigger
+source /var/lib/jenkins/weekly_report/jobFrequency.sh "${0##*/}" "$(date)" 
 
 exit_script true "System config ${SYSTEM_CONFIGURATION_NAME} added for tenant ${TENANT_CODE}"
 
