@@ -43,6 +43,8 @@ function initialize_global_variables() {
 	DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName:'$SERVER_NAME'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
 	echo DB_HOST : $DB_HOST
 
+	BASE_TENANT_DB_HOST=${DB_HOST}
+
 	# restore old value of IFS
 	IFS=$prevIFS
 
@@ -72,6 +74,15 @@ function get_system_config() {
 	echo ${query_result}
 }
 
+function get_system_config_base_tenant() {
+	local tenantCode=$1
+	local systemConfigName=$2
+	local query="select * from system_configuration where name = '$systemConfigName' and tenant_id = (select id from tenant where code = '$tenantCode') limit 1;"
+	local query_result=`mysql -N -u$DB_USER -p$DB_PASSWORD -h$BASE_TENANT_DB_HOST uniware -e "$query" | tr '\t' ';'`
+	
+	echo ${query_result}
+}
+
 function get_tenant() {
 	local tenantCode=$1
 	local query="select * from tenant where code = '$tenantCode';"
@@ -88,6 +99,14 @@ function get_base_tenant_code() {
 		suffix=${SERVER_NAME#"ECloud"}
 	elif [[ "$SERVER_NAME" == "Cloud"* ]]; then
 		suffix=${SERVER_NAME#"Cloud"}
+	elif [[ -n ${SERVER_NAME} ]]; then
+		# Dedicated server - use baseenterprise1 as base tenant
+		echo "Dedicated server: ${SERVER_NAME}"
+		suffix=1
+		
+		BASE_TENANT_DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName: 'ECloud1'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
+		
+		echo BASE_TENANT_DB_HOST : $BASE_TENANT_DB_HOST
 	fi
 	baseTenantCode+=$suffix
 
@@ -122,7 +141,7 @@ function get_base_tennant_code_and_config() {
 	BASE_TENANT_CODE=$(get_base_tenant_code)
 	echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
 
-	BASE_TENANT_SYSTEM_CONFIG=$(get_system_config "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
+	BASE_TENANT_SYSTEM_CONFIG=$(get_system_config_base_tenant "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
 	if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
 		exit_script false "System config ${SYSTEM_CONFIGURATION_NAME} does not exists for the base tenant ${BASE_TENANT_CODE}. Invalid system configuration"
 	fi
