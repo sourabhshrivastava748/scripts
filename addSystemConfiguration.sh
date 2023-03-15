@@ -101,12 +101,12 @@ function get_base_tenant_code() {
 		suffix=${SERVER_NAME#"Cloud"}
 	elif [[ -n ${SERVER_NAME} ]]; then
 		# Dedicated server - use baseenterprise1 as base tenant
-		echo "Dedicated server: ${SERVER_NAME}"
+		# echo "Dedicated server: ${SERVER_NAME}"
 		suffix=1
 
 		BASE_TENANT_DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName: 'ECloud1'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
 		
-		echo BASE_TENANT_DB_HOST : $BASE_TENANT_DB_HOST
+		# echo BASE_TENANT_DB_HOST : $BASE_TENANT_DB_HOST
 	fi
 	baseTenantCode+=$suffix
 
