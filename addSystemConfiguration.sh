@@ -91,27 +91,27 @@ function get_tenant() {
 	echo ${query_result}
 }
 
-function get_base_tenant_code() {
-	local baseTenantCode=${TENANT_PRODUCT_CODE}
-	baseTenantCode="base$(echo "$baseTenantCode" | tr '[:upper:]' '[:lower:]')"
+# function get_base_tenant_code() {
+# 	local baseTenantCode=${TENANT_PRODUCT_CODE}
+# 	baseTenantCode="base$(echo "$baseTenantCode" | tr '[:upper:]' '[:lower:]')"
 
-	if [[ "$SERVER_NAME" == "ECloud"* ]]; then
-		suffix=${SERVER_NAME#"ECloud"}
-	elif [[ "$SERVER_NAME" == "Cloud"* ]]; then
-		suffix=${SERVER_NAME#"Cloud"}
-	elif [[ -n ${SERVER_NAME} ]]; then
-		# Dedicated server - use baseenterprise1 as base tenant
-		# echo "Dedicated server: ${SERVER_NAME}"
-		suffix=1
+# 	if [[ "$SERVER_NAME" == "ECloud"* ]]; then
+# 		suffix=${SERVER_NAME#"ECloud"}
+# 	elif [[ "$SERVER_NAME" == "Cloud"* ]]; then
+# 		suffix=${SERVER_NAME#"Cloud"}
+# 	elif [[ -n ${SERVER_NAME} ]]; then
+# 		# Dedicated server - use baseenterprise1 as base tenant
+# 		# echo "Dedicated server: ${SERVER_NAME}"
+# 		suffix=1
 
-		BASE_TENANT_DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName: 'ECloud1'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
+# 		BASE_TENANT_DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName: 'ECloud1'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
 		
-		# echo BASE_TENANT_DB_HOST : $BASE_TENANT_DB_HOST
-	fi
-	baseTenantCode+=$suffix
+# 		# echo BASE_TENANT_DB_HOST : $BASE_TENANT_DB_HOST
+# 	fi
+# 	baseTenantCode+=$suffix
 
-	echo ${baseTenantCode}
-}
+# 	echo ${baseTenantCode}
+# }
 
 function check_system_config_exists() {
 	if [[ -n $(get_system_config "$TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME") ]]; then
@@ -138,7 +138,25 @@ function get_tenant_id_and_product_code() {
 }
 
 function get_base_tennant_code_and_config() {
-	BASE_TENANT_CODE=$(get_base_tenant_code)
+	local BASE_TENANT_CODE=${TENANT_PRODUCT_CODE}
+	BASE_TENANT_CODE="base$(echo "$BASE_TENANT_CODE" | tr '[:upper:]' '[:lower:]')"
+
+	if [[ "$SERVER_NAME" == "ECloud"* ]]; then
+		suffix=${SERVER_NAME#"ECloud"}
+	elif [[ "$SERVER_NAME" == "Cloud"* ]]; then
+		suffix=${SERVER_NAME#"Cloud"}
+	elif [[ -n ${SERVER_NAME} ]]; then
+		# Dedicated server - use baseenterprise1 as base tenant
+		# echo "Dedicated server: ${SERVER_NAME}"
+		suffix=1
+
+		BASE_TENANT_DB_HOST=`mongo --host $MONGO_HOST uniwareConfig --eval  "db.getMongo().setSecondaryOk();db.serverDetails.find({serverName: 'ECloud1'}).forEach(function(doc){print(doc.db);})" | grep -v -e "MongoDB shell" | tail -1`
+		
+		# echo BASE_TENANT_DB_HOST : $BASE_TENANT_DB_HOST
+	fi
+	BASE_TENANT_CODE+=$suffix
+
+	# BASE_TENANT_CODE=$(get_base_tenant_code)
 	echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
 	echo "BASE_TENANT_DB_HOST: ${BASE_TENANT_DB_HOST}"
 
