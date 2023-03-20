@@ -140,6 +140,7 @@ function get_tenant_id_and_product_code() {
 function get_base_tennant_code_and_config() {
 	BASE_TENANT_CODE=$(get_base_tenant_code)
 	echo "BASE_TENANT_CODE : ${BASE_TENANT_CODE}"
+	echo "BASE_TENANT_DB_HOST: ${BASE_TENANT_DB_HOST}"
 
 	BASE_TENANT_SYSTEM_CONFIG=$(get_system_config_base_tenant "$BASE_TENANT_CODE" "$SYSTEM_CONFIGURATION_NAME")
 	if [[ -z $BASE_TENANT_SYSTEM_CONFIG ]]; then
