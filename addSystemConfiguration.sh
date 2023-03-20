@@ -291,7 +291,7 @@ function reload_cache(){
 }
 
 function generate_mail() {
-	MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com,arindam.dubey@unicommerce.com"
+	MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com,,oncall@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,richard@unicommerce.com,shashank@unicommerce.com,alpha@unicommerce.com,prateek.mahajan@unicommerce.com"
 	MAIL_SUBJECT="Job AddSystemConfiguration is executed for Tenant: $TENANT_CODE, `date +'%Y-%m-%d'`"
 	MAIL_CONTENT="System configuration ${SYSTEM_CONFIGURATION_NAME} was added for tenant ${TENANT_CODE}. This build was triggered by: $BUILD_TRIGGER_BY"
 	
