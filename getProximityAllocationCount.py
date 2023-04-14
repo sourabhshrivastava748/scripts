@@ -1,37 +1,6 @@
-import pymongo, sys
-from datetime import date
-
-# serverName = sys.argv[1]
-# commonPrimary = getClient()
-# mongodbUri = getTenantSpecificMongo(commonPrimary)
-
-myclient = getClient()
-# dbsList = myclient.list_database_names()
-dbsList = ['tcns', 'curefit', 'pep', 'mamaearth', 'leayanglobal', 'bestseller']
-print("Database(tenant) list: " + str(dbsList))
-
-fileName = "/tmp/proximity-based-allocation-" + date.today().strftime("%d-%m-%Y") + ".csv"
-f = open(fileName, "w")
-f.write("Tenant,Allocation Count,Date\n")
-
-colName = "methodActivityMeta"
-
-for tenantCode in dbsList:
-	if (tenantCode != "uniware"):
-		mydb = myclient[tenantCode]
-		mycol = mydb[colName]
-		query = {
-			"tenantCode" : tenantCode,
-			"entityName" : "SALE_ORDER",
-			"created" : { "$gte" : "new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate(), 0, 0, 0)" },
-			"log": "/via Proximity/"
-		}
-
-		allocationCount = mycol.count_documents(query)
-		print(str(tenantCode) + "," + str(allocationCount) + "," + str(date.today().strftime("%d-%m-%Y")))
-		f.write(str(tenantCode) + "," + str(allocationCount) + "," + str(date.today().strftime("%d-%m-%Y")) + "\n")
-
-f.close()
+#!/usr/bin/python
+import sys, datetime, pytz, re
+from pymongo import MongoClient
 
 def getClient():
 	try:
@@ -39,13 +8,51 @@ def getClient():
 	    db= c['uniwareConfig'];
 	    db.test.insert_one({});
 	except:
-	    print("Server not available common1.mongo.unicommerce.infra");
-	    common = 0;
-
-	if common == 0:
 	    print("common changed")
 	    c = MongoClient('mongo2.e1-in.unicommerce.infra', 27017);
-    return c
+
+	return c
+
+# serverName = sys.argv[1]
+# commonPrimary = getClient()
+# mongodbUri = getTenantSpecificMongo(commonPrimary)
+
+myclient = getClient()
+# dbsList = myclient.list_database_names()
+# dbsList = ['tcns', 'curefit', 'pep', 'mamaearth', 'leayanglobal', 'bestseller']
+dbsList = ['tcns']
+print("Database list: " + str(dbsList))
+
+fileName = "/tmp/proximity-based-allocation-" + datetime.date.today().strftime("%d-%m-%Y") + ".csv"
+f = open(fileName, "w")
+f.write("Tenant,Allocation Count,Date\n")
+
+colName = "methodActivityMeta"
+utcMidnightDateTime = datetime.datetime.today().replace(hour = 0, minute = 0, second = 0, microsecond = 0).astimezone(pytz.UTC)
+print("utcMidnightDateTime: " + str(utcMidnightDateTime))
+
+search = "via Proximity"
+search_expr = re.compile(f".*{search}.*", re.I)
+
+for tenantCode in dbsList:
+	if (tenantCode != "uniware"):
+		mydb = myclient[tenantCode]
+		mycol = mydb[colName]
+
+		query = {
+			"tenantCode" : tenantCode,
+			"entityName" : "SALE_ORDER",
+			"created" : { "$gte" : utcMidnightDateTime },
+			"log": { "$regex" : search_expr }
+		}
+
+		allocationCount = mycol.count_documents(query)
+		print(str(tenantCode) + "," + str(allocationCount) + "," + str(datetime.date.today().strftime("%d-%m-%Y")))
+		f.write(str(tenantCode) + "," + str(allocationCount) + "," + str(datetime.date.today().strftime("%d-%m-%Y")) + "\n")
+
+f.close()
+
+
 
 
 # def getTenantSpecificMongo(commonPrimary):
