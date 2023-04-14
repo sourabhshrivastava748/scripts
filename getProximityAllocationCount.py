@@ -19,8 +19,8 @@ def getClient():
 
 myclient = getClient()
 # dbsList = myclient.list_database_names()
-# dbsList = ['tcns', 'curefit', 'pep', 'mamaearth', 'leayanglobal', 'bestseller']
-dbsList = ['tcns']
+dbsList = ['tcns', 'curefit', 'pep', 'mamaearth', 'leayanglobal', 'bestseller']
+# dbsList = ['tcns']
 print("Database list: " + str(dbsList))
 
 fileName = "/tmp/proximity-based-allocation-" + datetime.date.today().strftime("%d-%m-%Y") + ".csv"
