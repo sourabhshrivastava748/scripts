@@ -116,13 +116,7 @@ function print_logs() {
 function validate_input() {
 	if [ -z $tenantCode ] || [ -z $date ]; then
 		echo -e "\t \033[5;31m Invalid Input \033[0m"
-	    echo -e "\t \033[0;36m Use 'analyseLogs --help' for help \033[0m"
-	    echo
-	    exit
-    fi
-
-    if [ -z $saleOrderCode ] && [ -z $shipmentCode ]; then
-		echo -e "\t \033[5;31m Invalid Input \033[0m"
+		echo -e "\t \033[0;36m tenantCode or date cannot be empty \033[0m"
 	    echo -e "\t \033[0;36m Use 'analyseLogs --help' for help \033[0m"
 	    echo
 	    exit
