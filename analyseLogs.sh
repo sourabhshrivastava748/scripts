@@ -103,7 +103,7 @@ function print_logs() {
 
 	if [[ -n ${requestIdentifier} ]]; then
 		# match after colon (:) and remove everything between brackets []
-		zgrep "${requestIdentifier}" ${logFileName}* | grep -oP '(?<=\:).*' | sed -e 's/\[.*\ - /- /g' | grep --color -E "${key}|$"
+		zgrep "${requestIdentifier}" ${logFileName}* | grep -oP '(?<=\:).*' | sed 's/\[[^P]* - /- /g' | grep --color -E "${key}|$"
 	fi
 
 	echo "";	
