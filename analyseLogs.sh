@@ -12,8 +12,8 @@ set -eo pipefail
 
 function show_help() {
 	echo -e "\t\033[0;36m Usage: \033[0m"
-	echo -e "\t\t \033[0;33m analyseLogs --tenantCode <Tenant-Code> --date <Date in DD-MM-YYYY> --saleOrderCode <Sale-Order-Code> \033[0m"
-	echo -e "\t\t \033[0;33m analyseLogs --tenantCode <Tenant-Code> --date <Date in DD-MM-YYYY> --shipmentCode <Shipment-Code> \033[0m"
+	echo -e "\t\t \033[0;33m analyseLogs --tenantCode <Tenant-Code> --logDate <Date in DD-MM-YYYY> --saleOrderCode <Sale-Order-Code> \033[0m"
+	echo -e "\t\t \033[0;33m analyseLogs --tenantCode <Tenant-Code> --logDate <Date in DD-MM-YYYY> --shipmentCode <Shipment-Code> \033[0m"
 	echo
    	exit
 }
@@ -27,7 +27,7 @@ function set_args() {
 	        shift
 	        tenantCode=$1
         ;;
-      	"--date")
+      	"--logDate")
 			shift
 	        logDate=$1
         ;;
@@ -114,9 +114,9 @@ function print_logs() {
 # ==================================== Input validation ====================================
 
 function validate_input() {
-	if [ -z $tenantCode ] || [ -z $date ]; then
-		echo -e "\t \033[5;31m Invalid Input \033[0m"
-		echo -e "\t \033[0;36m tenantCode or date cannot be empty \033[0m"
+		if [ -z "$tenantCode" ] || [ -z "$logDate" ]; then
+			echo -e "\t \033[5;31m Invalid Input \033[0m"
+			echo -e "\t \033[0;36m tenantCode or logDate cannot be empty \033[0m"
 	    echo -e "\t \033[0;36m Use 'analyseLogs --help' for help \033[0m"
 	    echo
 	    exit
