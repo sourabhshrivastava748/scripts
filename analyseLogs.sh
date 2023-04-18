@@ -49,7 +49,7 @@ function set_args() {
 
 
 function get_logs() {
-	getServerLogs -t "${tenantCode}" -d "${logDate}" "app,task,app3"
+	/usr/scripts/getServerLogs.sh -t "${tenantCode}" -d "${logDate}" "app,task,app3"
 	
 	appLogFileName="/applogs/${tenantCode}.${logDate:6}-${logDate:3:2}-${logDate::2}"
 	taskLogFileName="/applogs/tasklog/${tenantCode}.${logDate:6}-${logDate:3:2}-${logDate::2}"
