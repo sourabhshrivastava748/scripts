@@ -1,12 +1,8 @@
 #!/bin/bash
 # Analyse UC Logs
 
-set -eo pipefail
-
-# Input
-# tenantCode="earthrhythm"
-# logDate="06-04-2023"
-# key="EART473648"
+# set -e
+# set -x
 
 # ==================================================================================
 
@@ -23,24 +19,24 @@ function show_help() {
 function set_args() {
   while [ "$1" != "" ]; do
     case $1 in
-		"--tenantCode")
-	        shift
-	        tenantCode=$1
+			"--tenantCode")
+        shift
+        tenantCode=$1
         ;;
-      	"--logDate")
-			shift
-	        logDate=$1
+    	"--logDate")
+				shift
+        logDate=$1
         ;;
-      	"--saleOrderCode")
-	        shift
-	        saleOrderCode=$1
+    	"--saleOrderCode")
+        shift
+        saleOrderCode=$1
         ;;
-      	"--shipmentCode")
-			shift
-	        shipmentCode=$1
+    	"--shipmentCode")
+				shift
+        shipmentCode=$1
         ;;
-        "--help")
-			show_help
+      "--help")
+				show_help
         ;;
     esac
     shift
@@ -59,25 +55,36 @@ function get_logs() {
 
 
 function get_request_identifier() {
-	if [[ -n ${appLogFileName} ]]; then
+	if [[ -n $(ls ${appLogFileName}*) ]]; then
+		# echo "##DEBUG appLogFileName: $appLogFileName"
 		logFileName=${appLogFileName}
+		# echo "##DEBUG key: $key"
+		# echo "##DEBUG logFileName: $logFileName"
+		# echo "##DEBUG flowString: $flowString"
+
 		requestIdentifier=$(zgrep "${key}" ${logFileName}* | grep "${flowString}" | grep -oP '(?<=\[).*?(?=\])' | head -1)
+
+		# echo "##DEBUG requestIdentifier: $requestIdentifier"
 		if [[ -n ${requestIdentifier} ]]; then
 			return
 		fi
 	fi
 
-	if [[ -n ${taskLogFileName} ]]; then
+	if [[ -n $(ls ${taskLogFileName}*) ]]; then
+		# echo "##DEBUG taskLogFileName: $taskLogFileName"
 		logFileName=${taskLogFileName}
 		requestIdentifier=$(zgrep "${key}" ${logFileName}* | grep "${flowString}" | grep -oP '(?<=\[).*?(?=\])' | head -1)
+		# echo "##DEBUG requestIdentifier: $requestIdentifier"
 		if [[ -n ${requestIdentifier} ]]; then
 			return
 		fi
 	fi
 
-	if [[ -n ${app3LogFileName} ]]; then
+	if [[ -n $(ls ${app3LogFileName}*) ]]; then
+		# echo "##DEBUG app3LogFileName: $app3LogFileName"
 		logFileName=${app3LogFileName}
 		requestIdentifier=$(zgrep "${key}" ${logFileName}* | grep "${flowString}" | grep -oP '(?<=\[).*?(?=\])' | head -1)
+		# echo "##DEBUG requestIdentifier: $requestIdentifier"
 		if [[ -n ${requestIdentifier} ]]; then
 			return
 		fi
@@ -88,22 +95,41 @@ function get_request_identifier() {
 
 function print_logs() {
 	echo ""; echo "";
-	echo -e "\t\033[0;33m ============ \033[0m"
-	echo -e "\t\033[0;33m Tenant: $tenantCode \033[0m"
-	echo -e "\t\033[0;33m Flow: $flow \033[0m"
-	echo -e "\t\033[0;33m Key: $key \033[0m"
-	echo -e "\t\033[0;33m Date: $logDate \033[0m"
-	echo -e "\t\033[0;33m Log file: ${logFileName} \033[0m"
+	echo -e "\033[0;33m ============ \033[0m"
+	echo -e "\033[0;33m Tenant: $tenantCode \033[0m"
+	echo -e "\033[0;33m Flow: $flow \033[0m"
+	echo -e "\033[0;33m Key: $key \033[0m"
+	echo -e "\033[0;33m Date: $logDate \033[0m"
 
 	get_request_identifier
 
-	echo -e "\t\033[0;33m Request Identifier: $requestIdentifier \033[0m"
-	echo -e "\t\033[0;33m ============ \033[0m"
-	echo ""; echo "";
+	echo -e "\033[0;33m Log file: ${logFileName} \033[0m"
+	echo -e "\033[0;33m Request identifier: $requestIdentifier \033[0m"
+	echo -e "\033[0;33m ============ \033[0m"
+	echo ""; 
 
 	if [[ -n ${requestIdentifier} ]]; then
-		# match after colon (:) and remove everything between brackets []
-		zgrep "${requestIdentifier}" ${logFileName}* | grep -oP '(?<=\:).*' | sed 's/\[[^P]* - /- /g' | grep --color -E "${key}|$"
+		# create temp files
+		tmpfile1=$(mktemp)
+		tmpfile2=$(mktemp)
+
+		# Get logs related to request identifier
+		zgrep "${requestIdentifier}" ${logFileName}* > $tmpfile1
+
+		# match after first colon (:) - starting with time
+		grep -oP '(?<=\:).*' $tmpfile1 > $tmpfile2
+
+		# remove text between square brackets []
+		echo "" > $tmpfile1
+		while IFS= read -r line; do
+		    echo ${line%%[*}- ${line#* - } >> $tmpfile1;
+		done < $tmpfile2
+
+		# highlight the key
+		grep --color -E "${key}|$" $tmpfile1
+
+		rm "$tmpfile1"
+		rm "$tmpfile2"
 	fi
 
 	echo "";	
