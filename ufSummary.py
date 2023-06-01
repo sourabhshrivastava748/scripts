@@ -5,6 +5,7 @@ from collections import Counter
 
 
 tenantCodeList = ["mamaearth","brandstudio","capl","tcns","bestseller","urbanclap","boatlifestyle","helioslifestyle","mosaicwellnesspvtlmt","brightlifecareindia","twt","curefit","imfirefly","edamama","pep","rarerabbit","bodycupid","kehpl","kottylifestyle","bataindialtd","juscorp","fabindialimited","fabbag","forevernew98","maisondauraine","gocolors"]
+
 print("Tenant list: " + str(tenantCodeList))
 
 
@@ -44,7 +45,7 @@ def getSummary(ufData, tenantCode, date):
 
 	else:
 		print("ufData length: " + str(len(ufData)))
-		summary = tenantCode + ",,,,,,,," 
+		summary = tenantCode + "," + len(ufData) + ",,,,,,," 
 
 	return summary
 
@@ -120,7 +121,7 @@ for tenantCode in tenantCodeList:
 		ufData = list(mycol.find(query, projection)) 			# TODO: use projection 
 
 		# Get Summary
-		summary = getSummary(ufData, tenantCode, datetime.datetime.today())
+		summary = getSummary(ufData, tenantCode, str(datetime.date.today()))
 		print(summary)
 		outputFile.write(summary + "\n")
 
