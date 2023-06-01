@@ -34,16 +34,9 @@ def getSummary(ufData):
 		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
-		# channelIssue = calculateCount('CHANNEL_ISSUE', ufData)
-		# syncTimingIssue = calculateCount('SYNC_TIMING_ISSUE', ufData)
-		# operationalIssue = calculateCount('OPERATIONAL_ISSUE', ufData)
-		# facilityMappingIssue = calculateCount('FACILITY_MAPPING_ISSUE', ufData)
-		# inventoryFormulaIssue = calculateCount('INVENTORY_FORMULA_ISSUE', ufData)
-		# summaryUnavailable = calculateCount('SUMMARY_UNAVAILABLE', ufData)
-
 		summary = tenantCode + "," + str(len(ufData) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
 
-	else:
+	else :
 		summary = ""
 
 	return summary
