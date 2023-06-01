@@ -42,10 +42,10 @@ for tenantCode in tenantCodeList:
 	query = {
 		"tenantCode" : tenantCode,
 		"currentStatus" : "UNFULFILLABLE",
-		"created" : { "$gte" : utcMidnightDateTime }
+		"unfulfillableTimeStamp" : { "$gte" : utcMidnightDateTime }
 	}
 	projection = {
-		'saleOrderItemCode' : 1,
+		'saleOrderCode' : 1,
 		'summary': 1
 	}
 
@@ -53,8 +53,8 @@ for tenantCode in tenantCodeList:
 	
 	for data in ufData:
 		print(data)
-		# print(str(tenantCode) + "SOI code: "+ str(data['summary']) + ", Summary: " + str(data['summary']))
-		# outputFile.write(str(tenantCode) + "SOI code: "+ str(data['summary']) + ", Summary: " + str(data['summary']) + "\n")
+		print(str(tenantCode) + "SO code: "+ str(data['saleOrderCode']) + ", Summary: " + str(data['summary']))
+		outputFile.write(str(tenantCode) + "SO code: "+ str(data['saleOrderCode']) + ", Summary: " + str(data['summary']) + "\n")
 	
 	print("")
 
