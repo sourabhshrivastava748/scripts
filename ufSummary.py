@@ -26,7 +26,7 @@ def calculateCount(name, ufData):
 	return counter
 
 def getSummary(ufData):
-	if (ufData.count() > 0):
+	if (len(ufData) > 0):
 		tenantCode = ufData[0]['tenantCode']
 		# channelIssue = Counter(tok['summary'] for tok in ufData)['CHANNEL_ISSUE']
 		# syncTimingIssue = Counter(tok['summary'] for tok in ufData)['SYNC_TIMING_ISSUE']
