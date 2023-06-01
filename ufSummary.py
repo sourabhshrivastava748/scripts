@@ -93,8 +93,8 @@ for tenantCode in tenantCodeList:
 	
 	print("")
 	for data in ufData:
-		print(data['summary'])
-	
+		print(data['tenantCode'] + ", " + data['summary'])
+
 	# Get Summary
 	summary = getSummary(ufData)
 	print(summary)
