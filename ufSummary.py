@@ -23,7 +23,7 @@ def getClient(uri1, uri2):
 
 
 def getSummary(ufData, date):
-	if (len(ufData) > 0):
+	if ((len(ufData) > 0) and ("summary" in ufData[0])):
 		tenantCode = ufData[0]['tenantCode']
 		channelIssue = Counter(tok['summary'] for tok in ufData)['CHANNEL_ISSUE']
 		syncTimingIssue = Counter(tok['summary'] for tok in ufData)['SYNC_TIMING_ISSUE']
