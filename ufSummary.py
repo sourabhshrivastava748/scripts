@@ -67,7 +67,7 @@ def getTenantSpecificMongoUri(tenantCode):
 	if (serverName):
 		mongoUri = getTenantSpecificMongoFromServerName(serverName)
 		print("Server Name: " + serverName + ", mongoUri: " + mongoUri)
-	else 
+	else :
 		print("Cannot find serverName for " + str(tenantCode))
 
 	return mongoUri
