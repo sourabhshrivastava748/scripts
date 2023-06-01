@@ -16,13 +16,13 @@ def getClient(uri1, uri2):
 	return c
 
 
-def calculateCount(name, ufData):
-	counter = 0
-	for data in ufData:
-		if (data['summary'] == name):
-			counter = counter + 1
+# def calculateCount(name, ufData):
+# 	counter = 0
+# 	for data in ufData:
+# 		if (data['summary'] == name):
+# 			counter = counter + 1
 
-	return counter
+# 	return counter
 
 def getSummary(ufData):
 	if (len(ufData) > 0):
@@ -34,9 +34,16 @@ def getSummary(ufData):
 		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
-		summary = tenantCode + "," + str(len(ufData) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
+		# channelIssue = calculateCount('CHANNEL_ISSUE', ufData)
+		# syncTimingIssue = calculateCount('SYNC_TIMING_ISSUE', ufData)
+		# operationalIssue = calculateCount('OPERATIONAL_ISSUE', ufData)
+		# facilityMappingIssue = calculateCount('FACILITY_MAPPING_ISSUE', ufData)
+		# inventoryFormulaIssue = calculateCount('INVENTORY_FORMULA_ISSUE', ufData)
+		# summaryUnavailable = calculateCount('SUMMARY_UNAVAILABLE', ufData)
 
-	else :
+		summary = tenantCode + "," + str(len(ufData)) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
+
+	else:
 		summary = ""
 
 	return summary
