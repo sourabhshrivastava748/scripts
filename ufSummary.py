@@ -51,7 +51,7 @@ def getServerNameFromTenant(tenantCode):
 
 
 def getTenantSpecificMongoFromServerName(serverName):
-	ommonMongoUri1 = "common1.mongo.unicommerce.infra:27017"
+	commonMongoUri1 = "common1.mongo.unicommerce.infra:27017"
 	commonMongoUri2 = "common2.mongo.unicommerce.infra:27017"
 	commonMongoClient = getClient(commonMongoUri1, commonMongoUri2)
 	db = commonMongoClient['uniwareConfig']
