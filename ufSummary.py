@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from collections import Counter
 
 
-tenantCodeList = ["capl", "brightlifecareindia", "Imfirefly"]
+tenantCodeList = ["mamaearth","brandstudio","capl","tcns","bestseller","urbanclap","boatlifestyle","helioslifestyle","mosaicwellnesspvtlmt","brightlifecareindia","twt","curefit","imfirefly","edamama","pep","rarerabbit","bodycupid","kehpl","kottylifestyle","bataindialtd","juscorp","fabindialimited","fabbag","forevernew98","maisondauraine","gocolors"]
 print("Tenant list: " + str(tenantCodeList))
 
 
@@ -32,10 +32,11 @@ def getSummary(ufData, date):
 		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
-		summary = tenantCode + "," + str(len(ufData)) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) + ", " + str(date)
+		summary = tenantCode + "," + str(len(ufData)) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) + "," + str(date)
 
 	else:
-		summary = ""
+		print("ufData length: " + str(len(ufData)))
+		summary = tenantCode + ",,,,,,,," 
 
 	return summary
 
@@ -86,9 +87,7 @@ print("utcMidnightDateTime: " + str(utcMidnightDateTime))
 
 # For all tenants
 for tenantCode in tenantCodeList:
-	# Get mongodbUri of tenant 			# TODO
-	# uri1 = "mongo1.e2-in.unicommerce.infra:27017"
-	# uri2 = "mongo2.e2-in.unicommerce.infra:27017"
+	# Get mongodbUri of tenant 			
 	mongoUri = []
 	mongoUri = getTenantSpecificMongoUri(tenantCode)
 
