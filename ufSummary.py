@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys, datetime, pytz, re
 from pymongo import MongoClient
+from collections import Counter
 
 def getClient(uri1, uri2):
 	try:
@@ -13,6 +14,30 @@ def getClient(uri1, uri2):
 	    print(str(uri2) + " - common changed")
 
 	return c
+
+
+def getSummary(ufData):
+	if (ufData.count() > 0):
+		tenantCode = ufData[0]['tenantCode']
+		channelIssue = Counter(tok['summary'] for tok in ufData)['CHANNEL_ISSUE']
+		syncTimingIssue = Counter(tok['summary'] for tok in ufData)['SYNC_TIMING_ISSUE']
+		operationalIssue = Counter(tok['summary'] for tok in ufData)['OPERATIONAL_ISSUE']
+		facilityMappingIssue = Counter(tok['summary'] for tok in ufData)['FACILITY_MAPPING_ISSUE']
+		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
+		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
+
+		summary = tenantCode + "," + str(ufData.count()) 
+					+ "," + channelIssue 
+					+ "," + syncTimingIssue 
+					+ "," + operationalIssue 
+					+ "," + facilityMappingIssue 
+					+ "," + inventoryFormulaIssue 
+					+ "," + summaryUnavailable 
+
+	else:
+		summary = ""
+
+	return summary
 
 # Input
 tenantCodeList = ["capl"]
@@ -45,20 +70,18 @@ for tenantCode in tenantCodeList:
 		"unfulfillableTimeStamp" : { "$gte" : utcMidnightDateTime }
 	}
 	projection = {
+		"tenantCode": 1,
 		'saleOrderCode' : 1,
 		'summary': 1
 	}
 
-	ufData = mycol.find(query, projection).limit(10) 			# TODO: use projection 
+	ufData = mycol.find(query, projection) 			# TODO: use projection 
 	
-	for data in ufData:
-		print(data)
-		print(str(tenantCode) + "SO code: "+ str(data['saleOrderCode']) + ", Summary: " + str(data['summary']))
-		outputFile.write(str(tenantCode) + "SO code: "+ str(data['saleOrderCode']) + ", Summary: " + str(data['summary']) + "\n")
-	
-	print("")
+	# Get Summary
+	summary = getSummary(ufData)
+	print(summary)
+	outputFile.write(summary + "\n")
 
-	# Write to file
 
 outputFile.close()
 
