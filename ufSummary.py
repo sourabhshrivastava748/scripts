@@ -89,6 +89,7 @@ for tenantCode in tenantCodeList:
 	# Get mongodbUri of tenant 			# TODO
 	# uri1 = "mongo1.e2-in.unicommerce.infra:27017"
 	# uri2 = "mongo2.e2-in.unicommerce.infra:27017"
+	mongoUri = []
 	mongoUri = getTenantSpecificMongoUri(tenantCode)
 
 	if (len(mongoUri) == 2):
