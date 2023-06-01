@@ -19,7 +19,7 @@ def getClient(uri1, uri2):
 def calculateCount(name, ufData):
 	counter = 0
 	for data in ufData:
-		if (ufData['summary'] == name):
+		if (data['summary'] == name):
 			counter = counter + 1
 
 	return counter
