@@ -52,8 +52,9 @@ for tenantCode in tenantCodeList:
 	ufData = mycol.find(query, projection).limit(1) 			# TODO: use projection 
 	
 	for data in ufData:
-		print(str(tenantCode) + "SOI code: "+ str(data['summary']) + ", Summary: " + str(data['summary']))
-		outputFile.write(str(tenantCode) + "SOI code: "+ str(data['summary']) + ", Summary: " + str(data['summary']) + "\n")
+		print(data)
+		# print(str(tenantCode) + "SOI code: "+ str(data['summary']) + ", Summary: " + str(data['summary']))
+		# outputFile.write(str(tenantCode) + "SOI code: "+ str(data['summary']) + ", Summary: " + str(data['summary']) + "\n")
 	
 	print("")
 
