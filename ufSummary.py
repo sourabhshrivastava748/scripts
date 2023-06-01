@@ -42,11 +42,6 @@ def getSummary(ufData):
 		inventoryFormulaIssue = calculateCount('INVENTORY_FORMULA_ISSUE', ufData)
 		summaryUnavailable = calculateCount('SUMMARY_UNAVAILABLE', ufData)
 
-
-		print("")
-		for data in ufData:
-			print(data['summary'])
-
 		print(channelIssue)
 		print(summaryUnavailable)
 		print(operationalIssue)
@@ -95,6 +90,10 @@ for tenantCode in tenantCodeList:
 	}
 
 	ufData = mycol.find(query, projection) 			# TODO: use projection 
+	
+	print("")
+	for data in ufData:
+		print(data['summary'])
 	
 	# Get Summary
 	summary = getSummary(ufData)
