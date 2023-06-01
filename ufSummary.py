@@ -21,6 +21,7 @@ def calculateCount(name, ufData):
 	for data in ufData:
 		if (data['summary'] == name):
 			counter = counter + 1
+			print(name)
 
 	return counter
 
@@ -40,6 +41,11 @@ def getSummary(ufData):
 		facilityMappingIssue = calculateCount('FACILITY_MAPPING_ISSUE', ufData)
 		inventoryFormulaIssue = calculateCount('INVENTORY_FORMULA_ISSUE', ufData)
 		summaryUnavailable = calculateCount('SUMMARY_UNAVAILABLE', ufData)
+
+
+		print("")
+		for data in ufData:
+			print(data['summary'])
 
 		print(channelIssue)
 		print(summaryUnavailable)
