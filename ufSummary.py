@@ -41,7 +41,7 @@ def getSummary(ufData):
 		inventoryFormulaIssue = calculateCount('INVENTORY_FORMULA_ISSUE', ufData)
 		summaryUnavailable = calculateCount('SUMMARY_UNAVAILABLE', ufData)
 
-		summary = tenantCode + "," + str(ufData.count()) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
+		summary = tenantCode + "," + str(summaryUnavailable) + str(ufData.count()) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
 
 	else:
 		summary = ""
