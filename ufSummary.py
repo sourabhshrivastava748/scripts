@@ -16,15 +16,7 @@ def getClient(uri1, uri2):
 	return c
 
 
-# def calculateCount(name, ufData):
-# 	counter = 0
-# 	for data in ufData:
-# 		if (data['summary'] == name):
-# 			counter = counter + 1
-
-# 	return counter
-
-def getSummary(ufData):
+def getSummary(ufData, date):
 	if (len(ufData) > 0):
 		tenantCode = ufData[0]['tenantCode']
 		channelIssue = Counter(tok['summary'] for tok in ufData)['CHANNEL_ISSUE']
@@ -34,14 +26,7 @@ def getSummary(ufData):
 		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
-		# channelIssue = calculateCount('CHANNEL_ISSUE', ufData)
-		# syncTimingIssue = calculateCount('SYNC_TIMING_ISSUE', ufData)
-		# operationalIssue = calculateCount('OPERATIONAL_ISSUE', ufData)
-		# facilityMappingIssue = calculateCount('FACILITY_MAPPING_ISSUE', ufData)
-		# inventoryFormulaIssue = calculateCount('INVENTORY_FORMULA_ISSUE', ufData)
-		# summaryUnavailable = calculateCount('SUMMARY_UNAVAILABLE', ufData)
-
-		summary = tenantCode + "," + str(len(ufData)) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
+		summary = tenantCode + "," + str(len(ufData)) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) + ", " + str(date)
 
 	else:
 		summary = ""
@@ -86,13 +71,9 @@ for tenantCode in tenantCodeList:
 	}
 
 	ufData = list(mycol.find(query, projection)) 			# TODO: use projection 
-	
-	print("")
-	for data in ufData:
-		print(data['tenantCode'] + ", " + data['summary'])
 
 	# Get Summary
-	summary = getSummary(ufData)
+	summary = getSummary(ufData, datetime.datetime.today())
 	print(summary)
 	outputFile.write(summary + "\n")
 
