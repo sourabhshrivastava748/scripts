@@ -45,7 +45,7 @@ def getServerNameFromTenant(tenantCode):
 	commonMongoUri2 = "common2.mongo.unicommerce.infra:27017"
 	commonMongoClient = getClient(commonMongoUri1, commonMongoUri2)
 	db = commonMongoClient['uniware']
-	col = mydb['tenantProfile']
+	col = db['tenantProfile']
 
 	return col.find_one({"tenantCode" : tenantCode})['serverName']
 
@@ -55,7 +55,7 @@ def getTenantSpecificMongoFromServerName(serverName):
 	commonMongoUri2 = "common2.mongo.unicommerce.infra:27017"
 	commonMongoClient = getClient(commonMongoUri1, commonMongoUri2)
 	db = commonMongoClient['uniwareConfig']
-	col = mydb['serverDetails']
+	col = db['serverDetails']
 
 	return col.find_one({"name" : serverName})['tenantSpecificMongoHosts']
 
