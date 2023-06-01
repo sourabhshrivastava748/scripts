@@ -15,7 +15,7 @@ def getClient(uri1, uri2):
 	return c
 
 # Input
-tenantCodeList = ["tcns"]
+tenantCodeList = ["capl"]
 colName = "unfulfillableItemsSnapshot"
 print("Tenant list: " + str(tenantCodeList))
 
@@ -30,8 +30,8 @@ print("utcMidnightDateTime: " + str(utcMidnightDateTime))
 # For all tenants
 for tenantCode in tenantCodeList:
 	# Get mongodbUri of tenant 			# TODO
-	uri1 = "mongo1.e1-in.unicommerce.infra:27017"
-	uri2 = "mongo2.e1-in.unicommerce.infra:27017"
+	uri1 = "mongo1.e2-in.unicommerce.infra:27017"
+	uri2 = "mongo2.e2-in.unicommerce.infra:27017"
 
 	# Create mongo client
 	myclient = getClient(uri1, uri2)
@@ -49,7 +49,7 @@ for tenantCode in tenantCodeList:
 		'summary': 1
 	}
 
-	ufData = mycol.find(query, projection).limit(1) 			# TODO: use projection 
+	ufData = mycol.find(query, projection).limit(10) 			# TODO: use projection 
 	
 	for data in ufData:
 		print(data)
