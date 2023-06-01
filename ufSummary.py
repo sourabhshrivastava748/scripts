@@ -40,13 +40,22 @@ for tenantCode in tenantCodeList:
 
 	# Get ufData
 	query = {
-			"tenantCode" : tenantCode,
-			"currentStatus" : "UNFULFILLABLE",
-			"created" : { "$gte" : utcMidnightDateTime }
-		}
+		"tenantCode" : tenantCode,
+		"currentStatus" : "UNFULFILLABLE",
+		"created" : { "$gte" : utcMidnightDateTime }
+	}
+	projection = {
+		'saleOrderItemCode' : 1,
+		'summary': 1
+	}
 
-	ufData = mycol.find(query) 			# TODO: use projection 
-	print(ufData)
+	ufData = mycol.find(query, projection).limit(1) 			# TODO: use projection 
+	
+	for data in ufData:
+		print(str(tenantCode) + "SOI code: "+ str(ufData['summary']) + ", Summary: " + str(ufData['summary']))
+		outputFile.write(str(tenantCode) + "SOI code: "+ str(ufData['summary']) + ", Summary: " + str(ufData['summary']) + "\n")
+	
+	print("")
 
 	# Write to file
 
