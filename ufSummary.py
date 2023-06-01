@@ -30,7 +30,7 @@ def ifSummaryExists(ufData):
 	return True
 
 
-def getSummary(ufData, date):
+def getSummary(ufData, tenantCode, date):
 	if ((len(ufData) > 0) and (ifSummaryExists(ufData))):
 		tenantCode = ufData[0]['tenantCode']
 		channelIssue = Counter(tok['summary'] for tok in ufData)['CHANNEL_ISSUE']
@@ -120,7 +120,7 @@ for tenantCode in tenantCodeList:
 		ufData = list(mycol.find(query, projection)) 			# TODO: use projection 
 
 		# Get Summary
-		summary = getSummary(ufData, datetime.datetime.today())
+		summary = getSummary(ufData, tenantCode, datetime.datetime.today())
 		print(summary)
 		outputFile.write(summary + "\n")
 
