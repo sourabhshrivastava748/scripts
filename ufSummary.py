@@ -46,7 +46,7 @@ def getSummary(ufData):
 		print(summaryUnavailable)
 		print(operationalIssue)
 
-		summary = tenantCode + "," + str(summaryUnavailable) + str(ufData.count()) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
+		summary = tenantCode + "," + str(ufData.count()) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) 
 
 	else:
 		summary = ""
@@ -89,7 +89,7 @@ for tenantCode in tenantCodeList:
 		'summary': 1
 	}
 
-	ufData = mycol.find(query, projection) 			# TODO: use projection 
+	ufData = list(mycol.find(query, projection)) 			# TODO: use projection 
 	
 	print("")
 	for data in ufData:
