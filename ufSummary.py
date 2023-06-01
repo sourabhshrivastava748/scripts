@@ -20,7 +20,7 @@ def calculateCount(name, ufData):
 	counter = 0
 	for data in ufData:
 		if (ufData['summary'] == name):
-			counter++
+			counter = counter + 1
 
 	return counter
 
