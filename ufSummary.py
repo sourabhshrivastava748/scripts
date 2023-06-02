@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from collections import Counter
 
 
-tenantCodeList = ["amntea","asg","baglineindia","bataindialmtd","bataindialtd","bestseller","boatlifestyle","bodycupid","brandstudio","brightlifecareindia","capl","carltonretailpvtltd","chogori","chumbak","cottonworld2","curefit","cureka","ecommercesityent","edamama","enviablymeindiapvtltd","faballeybusiness","fabbag","fabindialimited","forevernew98","frescoglobal","gaurik","geox","gocolors","helioslifestyle","iconic","imfirefly","indifusion","juscorp","justintime","kalamandir","kehpl","kottylifestyle","kushals","leayanglobal","maisondauraine","mamaearth","mosaicwellnesspvtlmt","mustardfashion","nanostuffs","onefriday","pep","racquethub","rarerabbit","sabhyataclothing","shoetree","slrpl","tasva","tcns","tresmode25","turtlelimited","twt","uapl","urbanclap"]
+tenantCodeList = ["amntea","asg","baglineindia","bataindialmtd","bataindialtd","bestseller","boatlifestyle","bodycupid","brandstudio","brightlifecareindia","capl","carltonretailpvtltd","chogori","chumbak","cottonworld2","curefit","cureka","edamama","enviablymeindiapvtltd","faballeybusiness","fabbag","fabindialimited","forevernew98","frescoglobal","gaurik","geox","gocolors","helioslifestyle","iconic","imfirefly","indifusion","juscorp","justintime","kalamandir","kehpl","kottylifestyle","kushals","leayanglobal","maisondauraine","mamaearth","mosaicwellnesspvtlmt","mustardfashion","nanostuffs","onefriday","pep","racquethub","rarerabbit","sabhyataclothing","shoetree","slrpl","tasva","tcns","tresmode25","turtlelimited","twt","uapl","urbanclap"]
 
 print("Tenant list: " + str(tenantCodeList))
 
