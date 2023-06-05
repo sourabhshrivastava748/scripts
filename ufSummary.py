@@ -38,10 +38,6 @@ tenantList = [
 				   "category": "Focus 30"
 				 },
 				 {
-				   "code": "cred",
-				   "category": "Focus 30"
-				 },
-				 {
 				   "code": "curefit",
 				   "category": "Focus 30"
 				 },
