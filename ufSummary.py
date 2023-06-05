@@ -58,10 +58,6 @@ tenantList = [
 				   "category": "Focus 30"
 				 },
 				 {
-				   "code": "goatlabs",
-				   "category": "Focus 30"
-				 },
-				 {
 				   "code": "gocolors",
 				   "category": "Focus 30"
 				 },
