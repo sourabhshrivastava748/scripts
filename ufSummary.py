@@ -70,7 +70,7 @@ tenantList = [
 				   "category": "Focus 30"
 				 },
 				 {
-				   "code": "jne",
+				   "code": "jnelogistic",
 				   "category": "Focus 30"
 				 },
 				 {
