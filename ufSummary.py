@@ -291,10 +291,10 @@ for tenant in tenantList:
 		query = {
 			"tenantCode" : tenant['code'],
 			"currentStatus" : "UNFULFILLABLE",
-			"unfulfillableTimeStamp" : { 
+			{ 
 				"$and": [
-					{ "$gte" : utcMidnightDateTime_today },
-					{ "$lte" : utcMidnightDateTime_yesterday }
+					{ "unfulfillableTimeStamp" : { "$gte" : utcMidnightDateTime_yesterday }},
+					{ "unfulfillableTimeStamp" : { "$lte" : utcMidnightDateTime_today }}
 				]
 			}
 		}
