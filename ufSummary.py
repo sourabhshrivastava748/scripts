@@ -265,13 +265,14 @@ midnightDateTime_yesterday = midnightDateTime_today - datetime.timedelta(days = 
 utcMidnightDateTime_today = midnightDateTime_today.astimezone(pytz.UTC)
 utcMidnightDateTime_yesterday = midnightDateTime_yesterday.astimezone(pytz.UTC)
 ufSummaryDate = datetime.date.today() - datetime.timedelta(days = 1)
+ufSummaryDateStr = ufSummaryDate.strftime("%d-%m-%Y")
 
 print("utcMidnightDateTime_today: " + str(utcMidnightDateTime_today))
 print("utcMidnightDateTime_yesterday: " + str(utcMidnightDateTime_yesterday))
 print("ufSummaryDate: " + str(ufSummaryDate))
 
 # Create output file
-outputFileName = "/tmp/uf-summary-" + ufSummaryDate.strftime("%d-%m-%Y") + ".csv"
+outputFileName = "/tmp/uf-summary-" + ufSummaryDateStr + ".csv"
 outputFile = open(outputFileName, "w")
 outputFile.write("Tenant,TenantCategory,TotalUFCount,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
 
@@ -302,10 +303,10 @@ for tenant in tenantList:
 			'summary': 1
 		}
 
-		ufData = list(mycol.find(query, projection)) 			# TODO: use projection 
+		ufData = list(mycol.find(query, projection)) 			
 
 		# Get Summary
-		summary = getSummary(ufData, tenant['code'], str(ufSummaryDate))
+		summary = getSummary(ufData, tenant['code'], str(ufSummaryDateStr))
 		print(summary)
 		outputFile.write(summary + "\n")
 
