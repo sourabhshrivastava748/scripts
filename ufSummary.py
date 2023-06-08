@@ -291,11 +291,9 @@ for tenant in tenantList:
 		query = {
 			"tenantCode" : tenant['code'],
 			"currentStatus" : "UNFULFILLABLE",
-			{ 
-				"$and": [
-					{ "unfulfillableTimeStamp" : { "$gte" : utcMidnightDateTime_yesterday }},
-					{ "unfulfillableTimeStamp" : { "$lte" : utcMidnightDateTime_today }}
-				]
+			"unfulfillableTimeStamp" : { 
+				"$gte" : utcMidnightDateTime_yesterday, 
+				"$lte" : utcMidnightDateTime_today 
 			}
 		}
 		projection = {
