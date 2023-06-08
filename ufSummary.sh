@@ -6,7 +6,7 @@ reportFilename=`ls -1t /tmp/uf-summary-* | head -1`
 
 echo "Report file: ${reportFilename}"
 
-yesterday_date=$(date -d "yesterday" +'%Y-%m-%d')
+yesterday_date=$(date -d "yesterday 13:00" +'%Y-%m-%d')
 
 MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
 MAIL_SUBJECT="Unfulfillable Sale Order Summary | ${yesterday_date}"
