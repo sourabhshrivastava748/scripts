@@ -259,13 +259,21 @@ def getTenantSpecificMongoUri(tenantCode):
 # Input
 ufColName = "unfulfillableItemsSnapshot"
 
+midnightDateTime_today = datetime.datetime.today().replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+midnightDateTime_yesterday = midnightDateTime_today - datetime.timedelta(days = 1)
+
+utcMidnightDateTime_today = midnightDateTime_today.astimezone(pytz.UTC)
+utcMidnightDateTime_yesterday = midnightDateTime_yesterday.astimezone(pytz.UTC)
+ufSummaryDate = datetime.date.today() - datetime.timedelta(days = 1)
+
+print("utcMidnightDateTime_today: " + str(utcMidnightDateTime_today))
+print("utcMidnightDateTime_yesterday: " + str(utcMidnightDateTime_yesterday))
+print("ufSummaryDate: " + str(ufSummaryDate))
+
 # Create output file
-outputFileName = "/tmp/uf-summary-" + datetime.date.today().strftime("%d-%m-%Y") + ".csv"
+outputFileName = "/tmp/uf-summary-" + ufSummaryDate.strftime("%d-%m-%Y") + ".csv"
 outputFile = open(outputFileName, "w")
 outputFile.write("Tenant,TenantCategory,TotalUFCount,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
-
-utcMidnightDateTime = datetime.datetime.today().replace(hour = 0, minute = 0, second = 0, microsecond = 0).astimezone(pytz.UTC)
-print("utcMidnightDateTime: " + str(utcMidnightDateTime))
 
 # For all tenants
 for tenant in tenantList:
@@ -283,7 +291,12 @@ for tenant in tenantList:
 		query = {
 			"tenantCode" : tenant['code'],
 			"currentStatus" : "UNFULFILLABLE",
-			"unfulfillableTimeStamp" : { "$gte" : utcMidnightDateTime }
+			"unfulfillableTimeStamp" : { 
+				"$and": [
+					{ "$gte" : utcMidnightDateTime_today },
+					{ "$lte" : utcMidnightDateTime_yesterday }
+				]
+			}
 		}
 		projection = {
 			"tenantCode": 1,
@@ -294,7 +307,7 @@ for tenant in tenantList:
 		ufData = list(mycol.find(query, projection)) 			# TODO: use projection 
 
 		# Get Summary
-		summary = getSummary(ufData, tenant['code'], str(datetime.date.today()))
+		summary = getSummary(ufData, tenant['code'], str(ufSummaryDate))
 		print(summary)
 		outputFile.write(summary + "\n")
 
