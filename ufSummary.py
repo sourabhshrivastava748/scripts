@@ -2,6 +2,7 @@
 import sys, datetime, pytz, re
 from pymongo import MongoClient
 from collections import Counter
+import mysql.connector
 
 
 # tenantCodeList = ["amntea","asg","baglineindia","bataindialmtd","bataindialtd","bestseller","boatlifestyle","bodycupid","brandstudio","brightlifecareindia","capl","carltonretailpvtltd","chogori","chumbak","cottonworld2","curefit","cureka","edamama","enviablymeindiapvtltd","faballeybusiness","fabbag","fabindialimited","forevernew98","frescoglobal","gaurik","geox","gocolors","helioslifestyle","iconic","imfirefly","indifusion","juscorp","justintime","kalamandir","kehpl","kottylifestyle","kushals","leayanglobal","maisondauraine","mamaearth","mosaicwellnesspvtlmt","mustardfashion","nanostuffs","onefriday","pep","racquethub","rarerabbit","sabhyataclothing","shoetree","slrpl","tasva","tcns","tresmode25","turtlelimited","twt","uapl","urbanclap"]
@@ -176,6 +177,7 @@ print("Tenant list: " + str(tenantList))
 
 
 
+
 def getClient(uri1, uri2):
 	try:
 	    c = MongoClient(uri1, 27017);
@@ -214,7 +216,24 @@ def getSummary(ufData, tenantCode, date):
 		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
-		summary = tenantCode + "," + getTenantCategory(tenantCode) + "," +  str(len(ufData)) + "," + str(channelIssue) + "," + str(syncTimingIssue) + "," + str(operationalIssue) + "," + str(facilityMappingIssue) + "," + str(inventoryFormulaIssue) + "," + str(summaryUnavailable) + "," + str(date)
+		totalUFCount = len(ufData)
+		totalSoiCount = getTotalSOICount(tenantCode)
+
+		if (totalSoiCount != 0):
+			ufPercentage = (float(totalUFCount) / totalSoiCount) * 100;
+
+		summary = tenantCode + "," 
+			+ getTenantCategory(tenantCode) + "," 
+			+ str(totalUFCount) + "," 
+			+ str(totalSoiCount) + "," 
+			+ str(ufPercentage) + "," 
+			+ str(channelIssue) + "," 
+			+ str(syncTimingIssue) + "," 
+			+ str(operationalIssue) + "," 
+			+ str(facilityMappingIssue) + "," 
+			+ str(inventoryFormulaIssue) + "," 
+			+ str(summaryUnavailable) + "," 
+			+ str(date)
 
 	else:
 		print("ufData length: " + str(len(ufData)))
@@ -256,62 +275,116 @@ def getTenantSpecificMongoUri(tenantCode):
 	return mongoUri
 
 
-# Input
-ufColName = "unfulfillableItemsSnapshot"
+def getMysqlDBFromServerName(serverName):
+	commonMongoUri1 = "common1.mongo.unicommerce.infra:27017"
+	commonMongoUri2 = "common2.mongo.unicommerce.infra:27017"
+	commonMongoClient = getClient(commonMongoUri1, commonMongoUri2)
+	db = commonMongoClient['uniwareConfig']
+	col = db['serverDetails']
 
-midnightDateTime_today = datetime.datetime.today().replace(hour = 0, minute = 0, second = 0, microsecond = 0)
-midnightDateTime_yesterday = midnightDateTime_today - datetime.timedelta(days = 1)
+	return col.find_one({"name" : serverName})['db']
 
-utcMidnightDateTime_today = midnightDateTime_today.astimezone(pytz.UTC)
-utcMidnightDateTime_yesterday = midnightDateTime_yesterday.astimezone(pytz.UTC)
-ufSummaryDate = datetime.date.today() - datetime.timedelta(days = 1)
-ufSummaryDateStr = ufSummaryDate.strftime("%d-%m-%Y")
-
-print("utcMidnightDateTime_today: " + str(utcMidnightDateTime_today))
-print("utcMidnightDateTime_yesterday: " + str(utcMidnightDateTime_yesterday))
-print("ufSummaryDate: " + str(ufSummaryDate))
-
-# Create output file
-outputFileName = "/tmp/uf-summary-" + ufSummaryDateStr + ".csv"
-outputFile = open(outputFileName, "w")
-outputFile.write("Tenant,TenantCategory,TotalUFCount,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
-
-# For all tenants
-for tenant in tenantList:
-	# Get mongodbUri of tenant 			
+def getMysqlDBUri(tenantCode):
+	serverName = getServerNameFromTenant(tenantCode)
+	print(tenantCode + ", Server Name: " + serverName)
 	mongoUri = []
-	mongoUri = getTenantSpecificMongoUri(tenant['code'])
+	if (serverName):
+		mysqlDbUri = getMysqlDBFromServerName(serverName)
+		print("Server Name: " + serverName + ", : MySQLdb: " + str(mysqlDbUri))
+	else :
+		print("Cannot find serverName for " + str(tenantCode))
 
-	if (len(mongoUri) == 2):
-		# Create mongo client
-		myclient = getClient(mongoUri[0], mongoUri[1])
-		mydb = myclient[tenant['code']]
-		mycol = mydb[ufColName]
+	return mysqlDbUri
 
-		# Get ufData
-		query = {
-			"tenantCode" : tenant['code'],
-			"currentStatus" : "UNFULFILLABLE",
-			"unfulfillableTimeStamp" : { 
-				"$gte" : utcMidnightDateTime_yesterday, 
-				"$lte" : utcMidnightDateTime_today 
+
+def getTotalSOICount(tenantCode):
+	soiCount = 0
+	try:
+		mysqlDbUri = getMysqlDBUri(tenantCode)
+		mysqlDbClient = mysql.connector.connect(
+			  host = mysqlDbUri,
+			  user ="developer",
+			  passwd ="DevelopeR@4#",
+			  database = "uniware"
+			)
+		mysqlDbCursor = mysqlDbClient.cursor();
+
+		soiCountQuery = "select count(*) from sale_order_item soi join sale_order so on soi.sale_order_id = so.id join tenant t on so.tenant_id = t.id where soi.created > '" + totalSoiCountFromDate + "' and soi.created < '" + totalSoiCountToDate + "' and t.code = '" + tenantCode + "';"
+		# print("soiCountQuery : " + soiCountQuery)
+
+		mysqlDbCursor.execute(soiCountQuery)
+
+		soiCount = mysqlDbCursor.fetchall()[0][0]:
+		print("Tenant: " + tenantCode + ", soiCount: " + soiCount)
+	finally:
+		mysqlDbClient.close()
+
+	return soiCount
+
+
+# 										-- Main --
+try:
+	ufColName = "unfulfillableItemsSnapshot"
+
+	midnightDateTime_today = datetime.datetime.today().replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+	midnightDateTime_yesterday = midnightDateTime_today - datetime.timedelta(days = 1)
+
+	utcMidnightDateTime_today = midnightDateTime_today.astimezone(pytz.UTC)
+	utcMidnightDateTime_yesterday = midnightDateTime_yesterday.astimezone(pytz.UTC)
+	ufSummaryDate = datetime.date.today() - datetime.timedelta(days = 1)
+	ufSummaryDateStr = ufSummaryDate.strftime("%d-%m-%Y")
+
+	totalSoiCountFromDate = ufSummaryDate.strftime("%Y-%m-%d")
+	totalSoiCountToDate = datetime.date.today().strftime("%Y-%m-%d")
+
+	print("utcMidnightDateTime_today: " + str(utcMidnightDateTime_today))
+	print("utcMidnightDateTime_yesterday: " + str(utcMidnightDateTime_yesterday))
+	print("ufSummaryDate: " + str(ufSummaryDate))
+
+	# Create output file
+	outputFileName = "/tmp/uf-summary-" + ufSummaryDateStr + ".csv"
+	outputFile = open(outputFileName, "w")
+	outputFile.write("Tenant,TenantCategory,TotalUFCount,TotalSOICount,UFPercentage,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
+
+	# For all tenants
+	for tenant in tenantList:
+		# Get mongodbUri of tenant 			
+		mongoUri = []
+		mongoUri = getTenantSpecificMongoUri(tenant['code'])
+
+		if (len(mongoUri) == 2):
+			# Create mongo client
+			myclient = getClient(mongoUri[0], mongoUri[1])
+			mydb = myclient[tenant['code']]
+			mycol = mydb[ufColName]
+
+			# Get ufData
+			query = {
+				"tenantCode" : tenant['code'],
+				"currentStatus" : "UNFULFILLABLE",
+				"unfulfillableTimeStamp" : { 
+					"$gte" : utcMidnightDateTime_yesterday, 
+					"$lte" : utcMidnightDateTime_today 
+				}
 			}
-		}
-		projection = {
-			"tenantCode": 1,
-			'saleOrderCode' : 1,
-			'summary': 1
-		}
+			projection = {
+				"tenantCode": 1,
+				'saleOrderCode' : 1,
+				'summary': 1
+			}
 
-		ufData = list(mycol.find(query, projection)) 			
+			ufData = list(mycol.find(query, projection)) 			
 
-		# Get Summary
-		summary = getSummary(ufData, tenant['code'], str(ufSummaryDateStr))
-		print(summary)
-		outputFile.write(summary + "\n")
-
+			# Get Summary
+			summary = getSummary(ufData, tenant['code'], str(ufSummaryDateStr))
+			print(summary)
+			outputFile.write(summary + "\n")
 
 
-outputFile.close()
+	outputFile.close()
+
+except:
+    print(sys.exc_info()[0]);
+    print("FAILED");
 
 
