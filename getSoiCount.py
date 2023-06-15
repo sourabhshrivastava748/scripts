@@ -148,7 +148,7 @@ try:
 	ufSummaryDate = datetime.date.today() - datetime.timedelta(days = 1)
 	ufSummaryDateStr = ufSummaryDate.strftime("%d-%m-%Y")
 	totalSoiCountFromDate = datetime.date.today().strftime("%Y-%m-%d")
-	totalSoiCountToDate = ufSummaryDateStr
+	totalSoiCountToDate = ufSummaryDate.strftime("%Y-%m-%d")
 
 	print("utcMidnightDateTime_today: " + str(utcMidnightDateTime_today))
 	print("utcMidnightDateTime_yesterday: " + str(utcMidnightDateTime_yesterday))
