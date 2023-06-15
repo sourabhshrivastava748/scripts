@@ -338,7 +338,7 @@ def getTotalSOICount(tenantCode):
 		print("Tenant: " + tenantCode + ", soiCount: " + soiCount)
 	except:
 		print(sys.exc_info()[0]);
-    	print("FAILED");
+		print("FAILED");
 	finally:
 		mysqlDbClient.close()
 
