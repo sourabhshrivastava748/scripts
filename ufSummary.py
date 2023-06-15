@@ -311,7 +311,7 @@ def getMysqlDBUri(tenantCode):
 
 
 def getTotalSOICount(tenantCode):
-	soiCount = 0
+	soiCount = ""
 	try:
 		print("Getting SOI count for tenant: " + tenantCode)
 		print("# DEBUG 1")
