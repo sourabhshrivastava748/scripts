@@ -165,7 +165,12 @@ try:
 	for tenant in tenantList:
 		# Get mysqql db of tenant 	
 		mysqlDbUri = getMysqlDBUri(tenant['code'])
-		mysqlDbClient = mysql.connector.connect(mysqlDbUri, "developer", "DevelopeR@4#", "uniware")
+		mysqlDbClient = mysql.connector.connect(
+			  host = mysqlDbUri,
+			  user ="developer",
+			  passwd ="DevelopeR@4#",
+			  database = "uniware"
+			)
 		mysqlDbCursor = mysqlDbClient.cursor();
 
 		soiCountQuery = "select count(*) from sale_order_item soi join sale_order so on soi.sale_order_id = so.id join tenant t on so.tenant_id = t.id where soi.created > '" + totalSoiCountFromDate + "' and soi.created < '" + totalSoiCountToDate + "' and t.code = '" + tenant['code'] + "';"
