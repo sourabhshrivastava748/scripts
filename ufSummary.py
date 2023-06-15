@@ -17,6 +17,18 @@ tenantList = [
 				 {
 				   "code": "bestseller",
 				   "category": "Focus 30"
+				 }
+			 ]
+
+
+tenantList2 = [
+				 {
+				   "code": "bataindialtd",
+				   "category": "Focus 30"
+				 },
+				 {
+				   "code": "bestseller",
+				   "category": "Focus 30"
 				 },
 				 {
 				   "code": "boatlifestyle",
@@ -222,7 +234,7 @@ def getSummary(ufData, tenantCode, date):
 		if (totalSoiCount != 0):
 			ufPercentage = (float(totalUFCount) / totalSoiCount) * 100;
 
-		summary = tenantCode + "," 
+		summary = (tenantCode + "," 
 			+ getTenantCategory(tenantCode) + "," 
 			+ str(totalUFCount) + "," 
 			+ str(totalSoiCount) + "," 
@@ -233,7 +245,7 @@ def getSummary(ufData, tenantCode, date):
 			+ str(facilityMappingIssue) + "," 
 			+ str(inventoryFormulaIssue) + "," 
 			+ str(summaryUnavailable) + "," 
-			+ str(date)
+			+ str(date))
 
 	else:
 		print("ufData length: " + str(len(ufData)))
