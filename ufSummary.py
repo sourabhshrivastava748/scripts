@@ -316,7 +316,8 @@ def getTotalSOICount(tenantCode):
 			soiCount = row[0]
 
 		print("Tenant: " + tenantCode + ", soiCount: " + str(soiCount))
-	except:
+	except Exception as e:
+		print(e)
 		print(sys.exc_info()[0]);
 		print("FAILED");
 	finally:
@@ -386,7 +387,8 @@ try:
 
 	outputFile.close()
 
-except:
+except Exception as e:
+	print(e)
     print(sys.exc_info()[0]);
     print("FAILED");
 
