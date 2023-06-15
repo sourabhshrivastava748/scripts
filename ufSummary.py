@@ -312,19 +312,24 @@ def getMysqlDBUri(tenantCode):
 def getTotalSOICount(tenantCode):
 	soiCount = 0
 	try:
+		print("# DEBUG 1")
 		mysqlDbUri = getMysqlDBUri(tenantCode)
+		print("# DEBUG 2")
 		mysqlDbClient = mysql.connector.connect(
 			  host = mysqlDbUri,
 			  user ="developer",
 			  passwd ="DevelopeR@4#",
 			  database = "uniware"
 			)
+		print("# DEBUG 3")
 		mysqlDbCursor = mysqlDbClient.cursor();
+		print("# DEBUG 4")
 
 		soiCountQuery = "select count(*) from sale_order_item soi join sale_order so on soi.sale_order_id = so.id join tenant t on so.tenant_id = t.id where soi.created > '" + totalSoiCountFromDate + "' and soi.created < '" + totalSoiCountToDate + "' and t.code = '" + tenantCode + "';"
-		# print("soiCountQuery : " + soiCountQuery)
+		print("soiCountQuery : " + soiCountQuery)
 
 		mysqlDbCursor.execute(soiCountQuery)
+		print("# DEBUG 1")
 
 		for row in mysqlDbCursor.fetchall():
 			soiCount = row[0]
