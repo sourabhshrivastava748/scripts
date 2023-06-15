@@ -233,7 +233,7 @@ def getSummary(ufData, tenantCode, date):
 
 		if (totalSoiCount != 0):
 			ufPercentage = (float(totalUFCount) / totalSoiCount) * 100;
-			ufPercentage = round(ufPercentage)
+			ufPercentage = round(ufPercentage, 2)
 
 		summary = (tenantCode + "," 
 			+ getTenantCategory(tenantCode) + "," 
