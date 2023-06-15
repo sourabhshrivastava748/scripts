@@ -234,7 +234,7 @@ def getSummary(ufData, tenantCode, date):
 
 	else:
 		print("ufData length: " + str(len(ufData)))
-		summary = tenantCode + "," + getTenantCategory(tenantCode) + "," + str(len(ufData)) + ",,,,,,," + str(date)
+		summary = tenantCode + "," + getTenantCategory(tenantCode) + "," + str(len(ufData)) + ",,,,,,,,," + str(date)
 
 	return summary
 
