@@ -1,13 +1,9 @@
 #!/usr/bin/python
 import sys, datetime, pytz, re
-import MySQLdb
+import mysql.connector
 from pymongo import MongoClient
 from collections import Counter
 
-
-# tenantCodeList = ["amntea","asg","baglineindia","bataindialmtd","bataindialtd","bestseller","boatlifestyle","bodycupid","brandstudio","brightlifecareindia","capl","carltonretailpvtltd","chogori","chumbak","cottonworld2","curefit","cureka","edamama","enviablymeindiapvtltd","faballeybusiness","fabbag","fabindialimited","forevernew98","frescoglobal","gaurik","geox","gocolors","helioslifestyle","iconic","imfirefly","indifusion","juscorp","justintime","kalamandir","kehpl","kottylifestyle","kushals","leayanglobal","maisondauraine","mamaearth","mosaicwellnesspvtlmt","mustardfashion","nanostuffs","onefriday","pep","racquethub","rarerabbit","sabhyataclothing","shoetree","slrpl","tasva","tcns","tresmode25","turtlelimited","twt","uapl","urbanclap"]
-
-# tenantCodeList = ["bataindialtd","bestseller","boatlifestyle","bodycupid","brandstudio","brightlifecareindia","capl","cred","curefit","edamama","fabbag","fabindialimited","forevernew","goatlabs","gocolors","helioslifestyle","imfirefly","jne","juscorp","kehpl","kottylifestyle","maisondauraine","mamaearth","mosaicwellnesspvtlmt","pep","rarerabbit","tcns","tmrw","twt","urbanclap","4mclothingllp","enamorecom","fashorlifestyle","hopscotch","leayanglobal","mosaicwellness","nuawoman","plumgoodness","portronics","quickshift","upscalio","vivaantafashion"]
 
 tenantList = [
 				 {
@@ -25,150 +21,6 @@ tenantList = [
 				 {
 				   "code": "bodycupid",
 				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "brandstudio",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "brightlifecareindia",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "capl",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "curefit",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "edamama",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "fabbag",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "fabindialimited",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "forevernew98",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "gocolors",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "helioslifestyle",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "imfirefly",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "jnelogistic",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "juscorp",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "kehpl",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "kottylifestyle",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "maisondauraine",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "mamaearth",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "mosaicwellnesspvtlmt",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "pep",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "rarerabbit",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "tcns",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "tmrw",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "twt",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "urbanclap",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "4mclothingllp",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "enamorecom",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "fashorlifestyle",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "hopscotch",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "leayanglobal",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "mosaicwellness",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "nuawoman",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "plumgoodness",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "portronics",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "quickshift",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "upscalio",
-				   "category": "UF Tracked Client"
-				 },
-				 {
-				   "code": "vivaantafashion",
-				   "category": "UF Tracked Client"
 				 }
 			]
 
@@ -313,13 +165,10 @@ try:
 	for tenant in tenantList:
 		# Get mysqql db of tenant 	
 		mysqlDbUri = getMysqlDBUri(tenant['code'])
-
-		mysqlDbClient = MySQLdb.connect(mysqlDbUri, "developer", "DevelopeR@4#", "uniware")
-
+		mysqlDbClient = mysql.connector.connect(mysqlDbUri, "developer", "DevelopeR@4#", "uniware")
 		mysqlDbCursor = mysqlDbClient.cursor();
 
 		soiCountQuery = "select count(*) from sale_order_item soi join sale_order so on soi.sale_order_id = so.id join tenant t on so.tenant_id = t.id where soi.created > '" + totalSoiCountFromDate + "' and soi.created < '" + totalSoiCountToDate + "' and t.code = '" + tenant['code'] + "';"
-
 		print("soiCountQuery : " + soiCountQuery)
 
 		mysqlDbCursor.execute(soiCountQuery)
@@ -359,7 +208,6 @@ try:
 		# 	summary = getSummary(ufData, tenant['code'], str(ufSummaryDateStr))
 		# 	print(summary)
 		# 	outputFile.write(summary + "\n")
-
 
 	outputFile.close()
 except:
