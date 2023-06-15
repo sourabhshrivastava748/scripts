@@ -5,23 +5,7 @@ from collections import Counter
 import mysql.connector
 
 
-# tenantCodeList = ["amntea","asg","baglineindia","bataindialmtd","bataindialtd","bestseller","boatlifestyle","bodycupid","brandstudio","brightlifecareindia","capl","carltonretailpvtltd","chogori","chumbak","cottonworld2","curefit","cureka","edamama","enviablymeindiapvtltd","faballeybusiness","fabbag","fabindialimited","forevernew98","frescoglobal","gaurik","geox","gocolors","helioslifestyle","iconic","imfirefly","indifusion","juscorp","justintime","kalamandir","kehpl","kottylifestyle","kushals","leayanglobal","maisondauraine","mamaearth","mosaicwellnesspvtlmt","mustardfashion","nanostuffs","onefriday","pep","racquethub","rarerabbit","sabhyataclothing","shoetree","slrpl","tasva","tcns","tresmode25","turtlelimited","twt","uapl","urbanclap"]
-
-# tenantCodeList = ["bataindialtd","bestseller","boatlifestyle","bodycupid","brandstudio","brightlifecareindia","capl","cred","curefit","edamama","fabbag","fabindialimited","forevernew","goatlabs","gocolors","helioslifestyle","imfirefly","jne","juscorp","kehpl","kottylifestyle","maisondauraine","mamaearth","mosaicwellnesspvtlmt","pep","rarerabbit","tcns","tmrw","twt","urbanclap","4mclothingllp","enamorecom","fashorlifestyle","hopscotch","leayanglobal","mosaicwellness","nuawoman","plumgoodness","portronics","quickshift","upscalio","vivaantafashion"]
-
 tenantList = [
-				 {
-				   "code": "bataindialtd",
-				   "category": "Focus 30"
-				 },
-				 {
-				   "code": "bestseller",
-				   "category": "Focus 30"
-				 }
-			 ]
-
-
-tenantList2 = [
 				 {
 				   "code": "bataindialtd",
 				   "category": "Focus 30"
@@ -313,27 +297,21 @@ def getMysqlDBUri(tenantCode):
 def getTotalSOICount(tenantCode):
 	try:
 		print("Getting SOI count for tenant: " + tenantCode)
-		print("# DEBUG 1")
 		mysqlDbUri = getMysqlDBUri(tenantCode)
-		print("# DEBUG 2")
 		mysqlDbClient = mysql.connector.connect(
 			  host = mysqlDbUri,
 			  user ="developer",
 			  passwd ="DevelopeR@4#",
 			  database = "uniware"
 			)
-		print("# DEBUG 3")
 		mysqlDbCursor = mysqlDbClient.cursor();
-		print("# DEBUG 4")
 
 		soiCountQuery = "select count(*) from sale_order_item soi join sale_order so on soi.sale_order_id = so.id join tenant t on so.tenant_id = t.id where soi.created > '" + totalSoiCountFromDate + "' and soi.created < '" + totalSoiCountToDate + "' and t.code = '" + tenantCode + "';"
 		print("soiCountQuery : " + soiCountQuery)
 
 		mysqlDbCursor.execute(soiCountQuery)
-		print("# DEBUG 5")
 
 		for row in mysqlDbCursor.fetchall():
-			print("# DEBUG 6 " + str(row[0]))
 			soiCount = row[0]
 
 		print("Tenant: " + tenantCode + ", soiCount: " + str(soiCount))
