@@ -365,44 +365,48 @@ try:
 
 	# For all tenants
 	for tenant in tenantList:
-		# Get mongodbUri of tenant 			
-		mongoUri = []
-		mongoUri = getTenantSpecificMongoUri(tenant['code'])
+		try:
+			# Get mongodbUri of tenant 			
+			mongoUri = []
+			mongoUri = getTenantSpecificMongoUri(tenant['code'])
 
-		if (len(mongoUri) == 2):
-			# Create mongo client
-			myclient = getClient(mongoUri[0], mongoUri[1])
-			mydb = myclient[tenant['code']]
-			mycol = mydb[ufColName]
+			if (len(mongoUri) == 2):
+				# Create mongo client
+				myclient = getClient(mongoUri[0], mongoUri[1])
+				mydb = myclient[tenant['code']]
+				mycol = mydb[ufColName]
 
-			# Get ufData
-			query = {
-				"tenantCode" : tenant['code'],
-				"currentStatus" : "UNFULFILLABLE",
-				"unfulfillableTimeStamp" : { 
-					"$gte" : utcMidnightDateTime_yesterday, 
-					"$lte" : utcMidnightDateTime_today 
+				# Get ufData
+				query = {
+					"tenantCode" : tenant['code'],
+					"currentStatus" : "UNFULFILLABLE",
+					"unfulfillableTimeStamp" : { 
+						"$gte" : utcMidnightDateTime_yesterday, 
+						"$lte" : utcMidnightDateTime_today 
+					}
 				}
-			}
-			projection = {
-				"tenantCode": 1,
-				'saleOrderCode' : 1,
-				'summary': 1
-			}
+				projection = {
+					"tenantCode": 1,
+					'saleOrderCode' : 1,
+					'summary': 1
+				}
 
-			ufData = list(mycol.find(query, projection)) 			
+				ufData = list(mycol.find(query, projection)) 			
 
-			# Get Summary
-			summary = getSummary(ufData, tenant['code'], str(ufSummaryDateStr))
-			print(summary)
-			outputFile.write(summary + "\n")
+				# Get Summary
+				summary = getSummary(ufData, tenant['code'], str(ufSummaryDateStr))
+				print(summary)
+				outputFile.write(summary + "\n")
 
-
-	outputFile.close()
+		except Exception as e:
+			print("Exception while calculating uf data for tenant: " + tenant['code'])
+			print(e)
 
 except Exception as e:
 	print(e)
 	print(sys.exc_info()[0]);
 	print("FAILED");
 
+finally:
+	outputFile.close()
 
