@@ -273,13 +273,14 @@ def getTenantSpecificMongoUri(tenantCode):
 
 
 def getMysqlDBFromServerName(serverName):
+	# Get Mysql DB replica 
 	commonMongoUri1 = "common1.mongo.unicommerce.infra:27017"
 	commonMongoUri2 = "common2.mongo.unicommerce.infra:27017"
 	commonMongoClient = getClient(commonMongoUri1, commonMongoUri2)
 	db = commonMongoClient['uniwareConfig']
 	col = db['serverDetails']
 
-	return col.find_one({"name" : serverName})['db']
+	return col.find_one({"name" : serverName})['replicatedTo']
 
 def getMysqlDBUri(tenantCode):
 	serverName = getServerNameFromTenant(tenantCode)
