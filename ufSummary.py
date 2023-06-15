@@ -229,7 +229,7 @@ def getSummary(ufData, tenantCode, date):
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
 		totalUFCount = len(ufData)
-		totalSoiCount = getTotalSOICount(tenantCode)
+		totalSoiCount = int(getTotalSOICount(tenantCode))
 
 		if (totalSoiCount != 0):
 			ufPercentage = (float(totalUFCount) / totalSoiCount) * 100;
