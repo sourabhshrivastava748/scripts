@@ -330,12 +330,15 @@ def getTotalSOICount(tenantCode):
 		print("soiCountQuery : " + soiCountQuery)
 
 		mysqlDbCursor.execute(soiCountQuery)
-		print("# DEBUG 1")
+		print("# DEBUG 5")
 
 		for row in mysqlDbCursor.fetchall():
 			soiCount = row[0]
 
 		print("Tenant: " + tenantCode + ", soiCount: " + soiCount)
+	except:
+		print(sys.exc_info()[0]);
+    	print("FAILED");
 	finally:
 		mysqlDbClient.close()
 
