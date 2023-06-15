@@ -311,7 +311,6 @@ def getMysqlDBUri(tenantCode):
 
 
 def getTotalSOICount(tenantCode):
-	soiCount = ""
 	try:
 		print("Getting SOI count for tenant: " + tenantCode)
 		print("# DEBUG 1")
@@ -337,14 +336,14 @@ def getTotalSOICount(tenantCode):
 			print("# DEBUG 6 " + str(row[0]))
 			soiCount = row[0]
 
-		print("Tenant: " + tenantCode + ", soiCount: " + soiCount)
+		print("Tenant: " + tenantCode + ", soiCount: " + str(soiCount))
 	except:
 		print(sys.exc_info()[0]);
 		print("FAILED");
 	finally:
 		mysqlDbClient.close()
 
-	return soiCount
+	return str(soiCount)
 
 
 # 										-- Main --
