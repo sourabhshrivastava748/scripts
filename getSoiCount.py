@@ -147,8 +147,10 @@ try:
 	utcMidnightDateTime_yesterday = midnightDateTime_yesterday.astimezone(pytz.UTC)
 	ufSummaryDate = datetime.date.today() - datetime.timedelta(days = 1)
 	ufSummaryDateStr = ufSummaryDate.strftime("%d-%m-%Y")
-	totalSoiCountFromDate = datetime.date.today().strftime("%Y-%m-%d")
-	totalSoiCountToDate = ufSummaryDate.strftime("%Y-%m-%d")
+
+	totalSoiCountFromDate = ufSummaryDate.strftime("%Y-%m-%d")
+	totalSoiCountToDate = datetime.date.today().strftime("%Y-%m-%d")
+	
 
 	print("utcMidnightDateTime_today: " + str(utcMidnightDateTime_today))
 	print("utcMidnightDateTime_yesterday: " + str(utcMidnightDateTime_yesterday))
