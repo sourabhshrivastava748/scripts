@@ -282,28 +282,37 @@ def getMysqlDBFromServerName(serverName):
 
 	return col.find_one({"name" : serverName})['replicatedTo']
 
-def getMysqlDBUri(tenantCode):
-	serverName = getServerNameFromTenant(tenantCode)
-	print(tenantCode + ", Server Name: " + serverName)
-	mongoUri = []
-	if (serverName):
-		mysqlDbUri = getMysqlDBFromServerName(serverName)
-		print("Server Name: " + serverName + ", : MySQLdb: " + str(mysqlDbUri))
-	else :
-		print("Cannot find serverName for " + str(tenantCode))
 
-	return mysqlDbUri
+
+def getDbNameFromServerName(serverName):
+	dedicatedReplica = ["Myntra", "Lenskart", "BrandStudio", "MamaEarth", "Ril", "ECloud3" , "ECloud2" , "ECloud1", "ECloud4", "Dhani", "ECloud5", "ECloud6", "Cloud37", "UniStage"]
+
+	if (serverName in dedicatedReplica):
+		return "uniware"
+	else:
+		return serverName
+
 
 
 def getTotalSOICount(tenantCode):
 	try:
 		print("Getting SOI count for tenant: " + tenantCode)
-		mysqlDbUri = getMysqlDBUri(tenantCode)
+
+		serverName = getServerNameFromTenant(tenantCode)
+		print(tenantCode + ", Server Name: " + serverName)
+		if (serverName):
+			mysqlDbReplicaUri = getMysqlDBFromServerName(serverName)
+			print("Server Name: " + serverName + ", : MySQLdb: " + str(mysqlDbReplicaUri))
+		else :
+			print("Cannot find serverName for " + str(tenantCode))
+
+		dbName = getDbNameFromServerName(serverName)
+
 		mysqlDbClient = mysql.connector.connect(
-			  host = mysqlDbUri,
+			  host = mysqlDbReplicaUri,
 			  user ="developer",
 			  passwd ="DevelopeR@4#",
-			  database = "uniware"
+			  database = dbName
 			)
 		mysqlDbCursor = mysqlDbClient.cursor();
 
@@ -324,6 +333,10 @@ def getTotalSOICount(tenantCode):
 		mysqlDbClient.close()
 
 	return str(soiCount)
+
+
+
+
 
 
 # 										-- Main --
