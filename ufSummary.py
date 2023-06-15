@@ -221,8 +221,8 @@ def getSummary(ufData, tenantCode, date):
 
 		summary = (tenantCode + "," 
 			+ getTenantCategory(tenantCode) + "," 
-			+ str(totalUFCount) + "," 
 			+ str(totalSoiCount) + "," 
+			+ str(totalUFCount) + "," 
 			+ str(ufPercentage) + "," 
 			+ str(channelIssue) + "," 
 			+ str(syncTimingIssue) + "," 
@@ -361,7 +361,7 @@ try:
 	# Create output file
 	outputFileName = "/tmp/uf-summary-" + ufSummaryDateStr + ".csv"
 	outputFile = open(outputFileName, "w")
-	outputFile.write("Tenant,TenantCategory,TotalUFCount,TotalSOICount,UFPercentage,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
+	outputFile.write("Tenant,TenantCategory,TotalSOICount,TotalUFCount,UFPercentage,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
 
 	# For all tenants
 	for tenant in tenantList:
