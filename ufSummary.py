@@ -212,14 +212,16 @@ def getSummary(ufData, tenantCode, date):
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
 		if (totalSoiCount != 0):
-			ufPercentage = (float(totalUFCount) / totalSoiCount) * 100;
-			ufPercentage = round(ufPercentage, 2)
+			ufPercentage = round(((float(totalUFCount) / totalSoiCount) * 100), 3);
+			nonOpsUf = channelIssue + syncTimingIssue + summaryUnavailable
+			nonOpsUfPercentage = round(((float(nonOpsUf) / totalSoiCount) * 100), 3);
 
 		summary = (tenantCode + "," 
 			+ getTenantCategory(tenantCode) + "," 
 			+ str(totalSoiCount) + "," 
 			+ str(totalUFCount) + "," 
 			+ str(ufPercentage) + "," 
+			+ str(nonOpsUfPercentage) + "," 
 			+ str(channelIssue) + "," 
 			+ str(syncTimingIssue) + "," 
 			+ str(operationalIssue) + "," 
@@ -234,7 +236,7 @@ def getSummary(ufData, tenantCode, date):
 			+ getTenantCategory(tenantCode) + "," 
 			+ str(totalSoiCount) + "," 
 			+ str(totalUFCount) + "," 
-			+ ",,,,,,," 
+			+ ",,,,,,,," 
 			+ str(date))
 
 	return summary
@@ -362,7 +364,7 @@ try:
 	# Create output file
 	outputFileName = "/tmp/uf-summary-" + ufSummaryDateStr + ".csv"
 	outputFile = open(outputFileName, "w")
-	outputFile.write("Tenant,TenantCategory,TotalSOICount,TotalUFCount,UFPercentage,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
+	outputFile.write("Tenant,TenantCategory,TotalSOICount,TotalUFCount,UFPercentage,NonOpsUFPercentage,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
 
 	# For all tenants
 	for tenant in tenantList:
