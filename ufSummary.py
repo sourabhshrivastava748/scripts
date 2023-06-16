@@ -203,6 +203,9 @@ def getTenantCategory(tenantCode):
 	return ""
 
 def getSummary(ufData, tenantCode, date):
+	totalUFCount = len(ufData)
+	totalSoiCount = int(getTotalSOICount(tenantCode))
+
 	if ((len(ufData) > 0) and (ifSummaryExists(ufData))):
 		tenantCode = ufData[0]['tenantCode']
 		channelIssue = Counter(tok['summary'] for tok in ufData)['CHANNEL_ISSUE']
@@ -211,9 +214,6 @@ def getSummary(ufData, tenantCode, date):
 		facilityMappingIssue = Counter(tok['summary'] for tok in ufData)['FACILITY_MAPPING_ISSUE']
 		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
-
-		totalUFCount = len(ufData)
-		totalSoiCount = int(getTotalSOICount(tenantCode))
 
 		if (totalSoiCount != 0):
 			ufPercentage = (float(totalUFCount) / totalSoiCount) * 100;
@@ -234,7 +234,12 @@ def getSummary(ufData, tenantCode, date):
 
 	else:
 		print("ufData length: " + str(len(ufData)))
-		summary = tenantCode + "," + getTenantCategory(tenantCode) + "," + str(len(ufData)) + ",,,,,,,,," + str(date)
+		summary = (tenantCode + "," 
+			+ getTenantCategory(tenantCode) + "," 
+			+ str(totalSoiCount) + "," 
+			+ str(totalUFCount) + "," 
+			+ ",,,,,,," 
+			+ str(date))
 
 	return summary
 
