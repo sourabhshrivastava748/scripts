@@ -1,7 +1,7 @@
 import mysql.connector
   
 dataBase = mysql.connector.connect(
-  host ="localhost",
+  host ="app1.stguat.unicommerce.infra",
   user ="root",
   passwd ="uniware",
   database = "uniware"
@@ -28,7 +28,7 @@ for index in indexList:
 
 
 for key in indexDict:
-    # print(str(key) + " : " + str(indexDict[key]))
+    print(str(key) + " : " + str(indexDict[key]))
     if (set(indexColumns) == set(indexDict[key])):
         indexExists = True
         print("Index exists for " + str(indexColumns) + " in table " + str(tableName) + " with name " + str(key))
