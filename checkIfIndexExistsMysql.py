@@ -1,9 +1,9 @@
 import mysql.connector
   
 dataBase = mysql.connector.connect(
-  host ="app1.stguat.unicommerce.infra",
-  user ="root",
-  passwd ="uniware",
+  host ="db-slave.ecloud1-in.unicommerce.infra",
+  user ="developer",
+  passwd ="DevelopeR@4#",
   database = "uniware"
 )
 
