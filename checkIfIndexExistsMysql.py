@@ -39,7 +39,7 @@ indexDict = dict()
 
 # -------------- test --------------
 
-tableNameList = ["shipping_package", "shipping_manifest_item", "shipping_manifest"]
+tableNameList = ["shipping_package", "shipping_manifest_item", "shipping_manifest", "inflow_receipt_item", "item_type", "picklist_item", "picklist"]
 
 for tableName in tableNameList:
     print("------ " + str(tableName) + "--------")
