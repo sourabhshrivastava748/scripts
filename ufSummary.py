@@ -230,7 +230,7 @@ def getSummary(ufData, tenantCode, date):
 			+ str(summaryUnavailable) + "," 
 			+ str(date))
 
-	else if (len(ufData) == 0): 
+	elif (len(ufData) == 0): 
 		summary = (tenantCode + "," 
 			+ getTenantCategory(tenantCode) + "," 
 			+ str(totalSoiCount) + "," 
