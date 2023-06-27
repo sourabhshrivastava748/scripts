@@ -235,7 +235,7 @@ def getSummary(ufData, tenantCode, date):
 			+ getTenantCategory(tenantCode) + "," 
 			+ str(totalSoiCount) + "," 
 			+ str(totalUFCount) + "," 
-			+ ",0,0,,,,,," 
+			+ "0,0,,,,,,," 
 			+ str(date))
 
 	else:
