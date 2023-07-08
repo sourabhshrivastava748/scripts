@@ -123,6 +123,10 @@ tenantList = [
 				   "category": "UF Tracked Client"
 				 },
 				 {
+				   "code": "buildingparadise",
+				   "category": "UF Tracked Client"
+				 },
+				 {
 				   "code": "enamorecom",
 				   "category": "UF Tracked Client"
 				 },
