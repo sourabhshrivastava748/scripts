@@ -75,10 +75,6 @@ tenantList = [
 				   "category": "Focus 30"
 				 },
 				 {
-				   "code": "kapiva",
-				   "category": "Focus 30"
-				 },
-				 {
 				   "code": "kehpl",
 				   "category": "Focus 30"
 				 },
@@ -152,6 +148,10 @@ tenantList = [
 				 },
 				 {
 				   "code": "hopscotch",
+				   "category": "UF Tracked Client"
+				 },
+				 {
+				   "code": "kapiva",
 				   "category": "UF Tracked Client"
 				 },
 				 {
