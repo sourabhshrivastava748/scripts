@@ -75,6 +75,10 @@ tenantList = [
 				   "category": "Focus 30"
 				 },
 				 {
+				   "code": "kapiva",
+				   "category": "Focus 30"
+				 },
+				 {
 				   "code": "kehpl",
 				   "category": "Focus 30"
 				 },
@@ -123,6 +127,18 @@ tenantList = [
 				   "category": "UF Tracked Client"
 				 },
 				 {
+				   "code": "ansdigital",
+				   "category": "UF Tracked Client"
+				 },
+				 {
+				   "code": "bearhouse",
+				   "category": "UF Tracked Client"
+				 },
+				 {
+				   "code": "bodyglove",
+				   "category": "UF Tracked Client"
+				 },
+				 {
 				   "code": "buildingparadise",
 				   "category": "UF Tracked Client"
 				 },
@@ -143,6 +159,14 @@ tenantList = [
 				   "category": "UF Tracked Client"
 				 },
 				 {
+				   "code": "mensabrand",
+				   "category": "UF Tracked Client"
+				 },
+				 {
+				   "code": "mylofamily",
+				   "category": "UF Tracked Client"
+				 },
+				 {
 				   "code": "nuawoman",
 				   "category": "UF Tracked Client"
 				 },
@@ -159,7 +183,15 @@ tenantList = [
 				   "category": "UF Tracked Client"
 				 },
 				 {
+				   "code": "redtag",
+				   "category": "UF Tracked Client"
+				 },
+				 {
 				   "code": "upscalio",
+				   "category": "UF Tracked Client"
+				 },
+				 {
+				   "code": "vaaree",
 				   "category": "UF Tracked Client"
 				 },
 				 {
