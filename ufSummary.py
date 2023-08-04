@@ -245,6 +245,7 @@ def getSummary(ufData, tenantCode, date):
 		operationalIssue = Counter(tok['summary'] for tok in ufData)['OPERATIONAL_ISSUE']
 		facilityMappingIssue = Counter(tok['summary'] for tok in ufData)['FACILITY_MAPPING_ISSUE']
 		inventoryFormulaIssue = Counter(tok['summary'] for tok in ufData)['INVENTORY_FORMULA_ISSUE']
+		manuallyCreatedOrder = Counter(tok['summary'] for tok in ufData)['MANUALLY_CREATED_ORDER']
 		summaryUnavailable = Counter(tok['summary'] for tok in ufData)['SUMMARY_UNAVAILABLE']
 
 		if (totalSoiCount != 0):
@@ -263,6 +264,7 @@ def getSummary(ufData, tenantCode, date):
 			+ str(operationalIssue) + "," 
 			+ str(facilityMappingIssue) + "," 
 			+ str(inventoryFormulaIssue) + "," 
+			+ str(manuallyCreatedOrder) + "," 
 			+ str(summaryUnavailable) + "," 
 			+ str(date))
 
@@ -271,7 +273,7 @@ def getSummary(ufData, tenantCode, date):
 			+ getTenantCategory(tenantCode) + "," 
 			+ str(totalSoiCount) + "," 
 			+ str(totalUFCount) + "," 
-			+ "0,0,,,,,,," 
+			+ "0,0,,,,,,,," 
 			+ str(date))
 
 	else:
@@ -280,7 +282,7 @@ def getSummary(ufData, tenantCode, date):
 			+ getTenantCategory(tenantCode) + "," 
 			+ str(totalSoiCount) + "," 
 			+ str(totalUFCount) + "," 
-			+ ",,,,,,,," 
+			+ ",,,,,,,,," 
 			+ str(date))
 
 	return summary
@@ -408,7 +410,7 @@ try:
 	# Create output file
 	outputFileName = "/tmp/uf-summary-" + ufSummaryDateStr + ".csv"
 	outputFile = open(outputFileName, "w")
-	outputFile.write("Tenant,TenantCategory,TotalSOICount,TotalUFCount,UFPercentage,NonOpsUFPercentage,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,SummaryUnavailable,Date\n")
+	outputFile.write("Tenant,TenantCategory,TotalSOICount,TotalUFCount,UFPercentage,NonOpsUFPercentage,ChannelIssue,SyncTimingIssue,OperationalIssue,FacilityMappingIssue,InventoryFormulaIssue,ManuallyCreatedOrder,SummaryUnavailable,Date\n")
 
 	# For all tenants
 	for tenant in tenantList:
