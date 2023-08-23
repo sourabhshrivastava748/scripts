@@ -10,8 +10,8 @@ import mysql.connector
 # fromDateString = fromDate.strftime("%Y-%m-%d")
 # toDateString = datetime.date.today().strftime("%Y-%m-%d")
 
-fromDateString = datetime.strptime("2023-07-01", "%Y-%m-%d")
-toDateString = datetime.strptime("2023-07-31", "%Y-%m-%d")
+fromDateString = "2023-07-01"
+toDateString = "2023-07-31"
 
 print("fromDate: " + fromDateString)
 print("toDate: " + toDateString)
