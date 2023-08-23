@@ -6,9 +6,12 @@ import mysql.connector
 
 
 # Create report file
-fromDate = datetime.date.today() - datetime.timedelta(days = 60)
-fromDateString = fromDate.strftime("%Y-%m-%d")
-toDateString = datetime.date.today().strftime("%Y-%m-%d")
+# fromDate = datetime.date.today() - datetime.timedelta(days = 60)
+# fromDateString = fromDate.strftime("%Y-%m-%d")
+# toDateString = datetime.date.today().strftime("%Y-%m-%d")
+
+fromDateString = datetime.strptime("2023-07-01", "%Y-%m-%d")
+toDateString = datetime.strptime("2023-07-31", "%Y-%m-%d")
 
 print("fromDate: " + fromDateString)
 print("toDate: " + toDateString)
@@ -30,16 +33,24 @@ mysqlDbClient = mysql.connector.connect(
 mysqlDbCursor = mysqlDbClient.cursor();
 
 tenantLookupQuery = "select tenant_code, count(lookup_status) from address_lookup_trace where tenant_code in (select distinct(tenant_code) from tenant_details) and lookup_status = 'FOUND' and created_at between '" + fromDateString + "' and '" + toDateString + "' group by tenant_code;"
+
+
+tenantLookupQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at BETWEEN '" + fromDateString + "' AND '" + toDateString + "' GROUP BY tenant_code;"
+
+
 print("tenantLookupQuery : " + tenantLookupQuery)
 
 try:
 	mysqlDbCursor.execute(tenantLookupQuery)
 
-	print("Tenant,LookupsFound,FromDate,ToDate")
+	print("Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,Date")
 	for row in mysqlDbCursor.fetchall():
 		tenant = row[0]
-		lookupsFound = row[1]
-		summary = str(tenant) + "," + str(lookupsFound) + "," + fromDateString + "," + toDateString
+		totalLookups = row[1]
+		lookupsFound = row[2]
+		lookupsNotFound = row[3]
+		uniqueMobileForLookupsFound = row[4]
+		summary = str(tenant) + "," + str(totalLookups) + "," + str(lookupsFound) + "," + str(lookupsNotFound) + "," + str(uniqueMobileForLookupsFound) + "," + toDateString
 		print(summary)
 		outputFile.write(summary + "\n")
 
