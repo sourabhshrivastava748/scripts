@@ -33,7 +33,7 @@ tenantLookupQuery = "select tenant_code, count(lookup_status) from address_looku
 print("tenantLookupQuery : " + tenantLookupQuery)
 
 try:
-	mysqlDbCursor.execute(soiCountQuery)
+	mysqlDbCursor.execute(tenantLookupQuery)
 
 	print("Tenant,LookupsFound,FromDate,ToDate")
 	for row in mysqlDbCursor.fetchall():
