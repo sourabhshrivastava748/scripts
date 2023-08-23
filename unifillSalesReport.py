@@ -6,14 +6,15 @@ import mysql.connector
 
 
 # Create report file
-# fromDate = datetime.date.today() - datetime.timedelta(days = 60)
-# fromDateString = fromDate.strftime("%Y-%m-%d")
-# toDateString = datetime.date.today().strftime("%Y-%m-%d")
+# First day of the month
+fromDate = datetime.date.today().replace(day=1)
+fromDateString = fromDate.strftime("%Y-%m-%d")
+toDateString = datetime.date.today().strftime("%Y-%m-%d")
 
-fromDateString = "2023-07-01"
-toDateString = "2023-07-31"
+# fromDateString = "2023-07-01"
+# toDateString = "2023-07-31"
 
-print("-- Unifill Sales Report --")
+print("-- Unifill Sales Report MTD --")
 print("fromDate: " + fromDateString)
 print("toDate: " + toDateString)
 
@@ -55,7 +56,7 @@ try:
 		summary = str(tenant) + "," + str(totalLookups) + "," + str(lookupsFound) + "," + str(lookupsNotFound) + "," + str(uniqueMobileForLookupsFound) + "," + toDateString
 		print(summary)
 		outputFile.write(summary + "\n")
-		
+
 	print("-- FINISHED --")
 
 except Exception as e:
