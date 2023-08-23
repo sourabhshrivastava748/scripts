@@ -29,7 +29,7 @@ mysqlDbClient = mysql.connector.connect(
 )
 mysqlDbCursor = mysqlDbClient.cursor();
 
-tenantLookupQuery = "select tenant_code, count(lookup_status) from address_lookup_trace where tenant_code in (select distinct(tenant_code) from tenant_details) and lookup_status = 'FOUND' and created_at between " + fromDateString + " and " + toDateString + " group by tenant_code;"
+tenantLookupQuery = "select tenant_code, count(lookup_status) from address_lookup_trace where tenant_code in (select distinct(tenant_code) from tenant_details) and lookup_status = 'FOUND' and created_at between '" + fromDateString + "' and '" + toDateString + "' group by tenant_code;"
 print("tenantLookupQuery : " + tenantLookupQuery)
 
 try:
