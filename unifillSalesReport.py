@@ -18,7 +18,7 @@ print("-- Unifill Sales Report MTD --")
 print("fromDate: " + fromDateString)
 print("toDate: " + toDateString)
 
-outputFileName = "/tmp/unifill-sales-report_" + fromDateString  + "_to_" + toDateString  + ".csv"
+outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
 outputFile = open(outputFileName, "w")
 
 
@@ -32,9 +32,6 @@ mysqlDbClient = mysql.connector.connect(
   database = dbName
 )
 mysqlDbCursor = mysqlDbClient.cursor();
-
-tenantLookupQuery = "select tenant_code, count(lookup_status) from address_lookup_trace where tenant_code in (select distinct(tenant_code) from tenant_details) and lookup_status = 'FOUND' and created_at between '" + fromDateString + "' and '" + toDateString + "' group by tenant_code;"
-
 
 tenantLookupQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at BETWEEN '" + fromDateString + "' AND '" + toDateString + "' GROUP BY tenant_code;"
 
