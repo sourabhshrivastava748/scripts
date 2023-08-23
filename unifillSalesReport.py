@@ -22,7 +22,7 @@ mysqlDbUri = "db.address.unicommerce.infra"
 dbName = "turbo"
 
 mysqlDbClient = mysql.connector.connect(
-  host = mysqlDbReplicaUri,
+  host = mysqlDbUri,
   user ="developer",
   passwd ="DevelopeR@4#",
   database = dbName
