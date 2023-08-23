@@ -13,12 +13,12 @@ import mysql.connector
 fromDateString = "2023-07-01"
 toDateString = "2023-07-31"
 
+print("-- Unifill Sales Report --")
 print("fromDate: " + fromDateString)
 print("toDate: " + toDateString)
 
 outputFileName = "/tmp/unifill-sales-report_" + fromDateString  + "_to_" + toDateString  + ".csv"
 outputFile = open(outputFileName, "w")
-outputFile.write("Tenant,LookupsFound,FromDate,ToDate\n")
 
 
 mysqlDbUri = "db.address.unicommerce.infra"
@@ -43,7 +43,9 @@ print("tenantLookupQuery : " + tenantLookupQuery)
 try:
 	mysqlDbCursor.execute(tenantLookupQuery)
 
+	outputFile.write("Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,Date\n")
 	print("Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,Date")
+	
 	for row in mysqlDbCursor.fetchall():
 		tenant = row[0]
 		totalLookups = row[1]
@@ -53,6 +55,8 @@ try:
 		summary = str(tenant) + "," + str(totalLookups) + "," + str(lookupsFound) + "," + str(lookupsNotFound) + "," + str(uniqueMobileForLookupsFound) + "," + toDateString
 		print(summary)
 		outputFile.write(summary + "\n")
+		
+	print("-- FINISHED --")
 
 except Exception as e:
 	print(e)
