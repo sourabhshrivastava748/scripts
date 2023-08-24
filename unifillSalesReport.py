@@ -5,11 +5,13 @@ from collections import Counter
 import mysql.connector
 
 
-# Create report file
-# First day of the month
+
+# FromDate : First day of the month
 fromDate = datetime.date.today().replace(day=1)
 fromDateString = fromDate.strftime("%Y-%m-%d")
-toDateString = datetime.date.today().strftime("%Y-%m-%d")
+# ToDate : Yesterday
+toDate = datetime.date.today() - datetime.timedelta(days = 1)
+toDateString = toDate.strftime("%Y-%m-%d")
 
 # fromDateString = "2023-07-01"
 # toDateString = "2023-07-31"
@@ -18,6 +20,7 @@ print("-- Unifill Sales Report MTD --")
 print("fromDate: " + fromDateString)
 print("toDate: " + toDateString)
 
+# Create report file
 outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
 outputFile = open(outputFileName, "w")
 
