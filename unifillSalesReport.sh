@@ -6,10 +6,10 @@ echo "Report file: ${reportFilename}"
 
 yesterday_date=$(date -d "yesterday 13:00" +'%d-%b-%Y')
 
-MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com"
+MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,bhupi@unicommerce.com,anurag.mittal@unicommerce.com,accounts@unicommerce.com"
 # MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
 
 MAIL_SUBJECT="Unifill Sales Report MTD | ${yesterday_date}"
-MAIL_CONTENT="Please find the attachment"
+MAIL_CONTENT="Please find the attachment. Report prepared by alpha team."
 
 echo ${MAIL_CONTENT} | mutt -s "${MAIL_SUBJECT}" -a "${reportFilename}" -- "${MAIL_RECIPIENTS}"
