@@ -6,22 +6,24 @@ import mysql.connector
 
 
 
-# FromDate : First day of the month
-fromDate = datetime.date.today().replace(day=1)
-fromDateString = fromDate.strftime("%Y-%m-%d")
-# ToDate : Yesterday
-toDate = datetime.date.today() - datetime.timedelta(days = 1)
-toDateString = toDate.strftime("%Y-%m-%d")
+# FromDate : First day of the month.. ToDate : Yesterday
 
-# fromDateString = "2023-07-01"
-# toDateString = "2023-07-31"
+# fromDate = datetime.date.today().replace(day=1)
+# fromDateString = fromDate.strftime("%Y-%m-%d")
+# toDate = datetime.date.today() - datetime.timedelta(days = 1)
+# toDateString = toDate.strftime("%Y-%m-%d")
+
+fromDateString = "2023-04-18"
+toDateString = "2023-05-17"
 
 print("-- Unifill Sales Report MTD --")
 print("fromDate: " + fromDateString)
 print("toDate: " + toDateString)
 
 # Create report file
-outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
+# outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
+outputFileName = "/tmp/unifill-sales-report_" fromDateString + "_to_" + toDateString  + ".csv"
+
 outputFile = open(outputFileName, "w")
 
 
@@ -36,13 +38,13 @@ mysqlDbClient = mysql.connector.connect(
 )
 mysqlDbCursor = mysqlDbClient.cursor();
 
-tenantLookupQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at BETWEEN '" + fromDateString + "' AND '" + toDateString + "' GROUP BY tenant_code;"
+unifillReportQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at BETWEEN '" + fromDateString + "' AND '" + toDateString + "' GROUP BY tenant_code;"
 
 
-print("tenantLookupQuery : " + tenantLookupQuery)
+print("unifillReportQuery : " + unifillReportQuery)
 
 try:
-	mysqlDbCursor.execute(tenantLookupQuery)
+	mysqlDbCursor.execute(unifillReportQuery)
 
 	outputFile.write("Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,Date\n")
 	print("Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,Date")
