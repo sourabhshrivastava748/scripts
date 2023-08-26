@@ -22,7 +22,7 @@ print("toDate: " + toDateString)
 
 # Create report file
 # outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
-outputFileName = "/tmp/unifill-sales-report_" fromDateString + "_to_" + toDateString  + ".csv"
+outputFileName = "/tmp/unifill-sales-report_" + fromDateString + "_to_" + toDateString  + ".csv"
 
 outputFile = open(outputFileName, "w")
 
