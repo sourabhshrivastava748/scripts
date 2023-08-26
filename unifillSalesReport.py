@@ -13,8 +13,8 @@ import mysql.connector
 # toDate = datetime.date.today() - datetime.timedelta(days = 1)
 # toDateString = toDate.strftime("%Y-%m-%d")
 
-fromDateString = "2023-04-18"
-toDateString = "2023-05-17"
+fromDateString = "2023-05-18"
+toDateString = "2023-06-17"
 
 print("-- Unifill Sales Report MTD --")
 print("fromDate: " + fromDateString)
