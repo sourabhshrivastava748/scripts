@@ -58,12 +58,12 @@ try:
 		lookupsFound = row[2]
 		lookupsNotFound = row[3]
 		uniqueMobileForLookupsFound = row[4]
-		summary = str(tenant) + "," 
+		summary = (str(tenant) + "," 
 						+ str(totalLookups) + "," 
 						+ str(lookupsFound) + "," 
 						+ str(lookupsNotFound) + "," 
 						+ str(uniqueMobileForLookupsFound) + "," 
-						+ toDateString
+						+ toDateString)
 		print(summary)
 		outputFile.write(summary + "\n")
 
