@@ -6,18 +6,25 @@ import mysql.connector
 
 
 
-# FromDate : First day of the month.. ToDate : Yesterday
-fromDate = datetime.date.today().replace(day=1)
+# FromDate : First day of the month (based on yesterday's date) 
+fromDate = datetime.date.today() - datetime.timedelta(days = 1)
+fromDate = fromDate.replace(day=1)
 fromDateString = fromDate.strftime("%Y-%m-%d")
+
+# ToDate for the report
 toDate = datetime.date.today() - datetime.timedelta(days = 1)
 toDateString = toDate.strftime("%Y-%m-%d")
+
+# ToDate for the query : Today's date (less than query)
+todayDate = datetime.date.today()
+todayDateString = todayDate.strftime("%Y-%m-%d")
 
 # fromDateString = "2023-07-18"
 # toDateString = "2023-08-17"
 
 print("-- Unifill Sales Report MTD --")
 print("fromDate: " + fromDateString)
-print("toDate: " + toDateString)
+print("toDate (inclusive): " + toDateString)
 
 # Create report file
 outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
@@ -37,7 +44,7 @@ mysqlDbClient = mysql.connector.connect(
 )
 mysqlDbCursor = mysqlDbClient.cursor();
 
-unifillReportQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at BETWEEN '" + fromDateString + "' AND '" + toDateString + "' GROUP BY tenant_code;"
+unifillReportQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at >= '" + fromDateString + "' AND created_at < '" + todayDateString + "' GROUP BY tenant_code;"
 
 
 # unifillReportQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at BETWEEN '" + fromDateString + "' AND '" + toDateString + "' AND mobile NOT IN ('+919999900000','+919999911111','+919999999999','+919901033800','+919711903969','+919428140479','+919015238030','+919315974807','+919663265675','+919468283901','+918126148700','+918700789547') GROUP BY tenant_code;"
