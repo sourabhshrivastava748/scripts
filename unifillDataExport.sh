@@ -2,8 +2,6 @@ echo "Unifill data export"
 
 MobileList=$1
 
-echo "Mobile List: $MobileList"
-
 python3 unifillDataExport.py $MobileList
 
 # Send mail

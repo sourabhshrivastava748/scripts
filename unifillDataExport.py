@@ -4,87 +4,77 @@ from pymongo import MongoClient
 from collections import Counter
 import mysql.connector
 
+#---
 mobileListString = sys.argv[1]
-print("python mobile list: " + mobileListString)
+mobileList = mobileListString.split(",")
+for i in range(0, len(mobileList)):
+	mobileList[i] = "\"" + mobileList[i] + "\""
+
+mobileListString = String.Join(",", mobileList)	
+print("Mobile list: " + mobileListString)
 
 
+#---
+reportDate = datetime.date.today()
+reportDateString = reportDate.strftime("%Y-%m-%d")
 
-# # FromDate : First day of the month (based on yesterday's date) 
-# fromDate = datetime.date.today() - datetime.timedelta(days = 1)
-# fromDate = fromDate.replace(day=1)
-# fromDateString = fromDate.strftime("%Y-%m-%d")
-
-# # ToDate for the report
-# toDate = datetime.date.today() - datetime.timedelta(days = 1)
-# toDateString = toDate.strftime("%Y-%m-%d")
-
-# # ToDate for the query : Today's date (less than query)
-# todayDate = datetime.date.today()
-# todayDateString = todayDate.strftime("%Y-%m-%d")
-
-# # fromDateString = "2023-07-18"
-# # toDateString = "2023-08-17"
-
-# print("-- Unifill Sales Report MTD --")
-# print("fromDate: " + fromDateString)
-# print("toDate (inclusive): " + toDateString)
-
-# # Create report file
-# outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
-# # outputFileName = "/tmp/unifill-sales-report_" + fromDateString + "_to_" + toDateString  + ".csv"
-
-# outputFile = open(outputFileName, "w")
+outputFileName = "/tmp/unifill-data-export_" + toDateString  + ".csv"
+mysqlDbUri = "db-slave.address.unicommerce.infra"
+dbName = "turbo"
 
 
-# mysqlDbUri = "db.address.unicommerce.infra"
-# dbName = "turbo"
+#---
+try: 
+	outputFile = open(outputFileName, "w")
 
-# mysqlDbClient = mysql.connector.connect(
-#   host = mysqlDbUri,
-#   user ="developer",
-#   passwd ="DevelopeR@4#",
-#   database = dbName
-# )
-# mysqlDbCursor = mysqlDbClient.cursor();
+	if (len(mobileList) > 1000) :
+		outputFile.write("At max 1000 mobiles are allowed for data export")
 
-# unifillReportQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at >= '" + fromDateString + "' AND created_at < '" + todayDateString + "' GROUP BY tenant_code;"
+	else:
+		mysqlDbClient = mysql.connector.connect(
+		  host = mysqlDbUri,
+		  user ="developer",
+		  passwd ="DevelopeR@4#",
+		  database = dbName
+		)
+		mysqlDbCursor = mysqlDbClient.cursor();
 
+		unifillDataExportQuery = "select turbo_mobile, address_line1, address_line2, city, district, state_code, country_code, pincode, shipping_package_uc_status, uniware_sp_created, uniware_sp_updated from shipping_package_address where turbo_mobile in (" + mobileListString + ")";
 
-# # unifillReportQuery = "SELECT tenant_code, count(*) AS total_lookups, SUM(CASE WHEN lookup_status = 'FOUND' THEN 1 ELSE 0 END) AS lookups_found, SUM(CASE WHEN lookup_status = 'NOT_FOUND' THEN 1 ELSE 0 END) AS lookups_not_found, COUNT(DISTINCT CASE WHEN lookup_status = 'FOUND' THEN mobile END) AS lookups_found_unique_mobiles FROM address_lookup_trace WHERE     tenant_code IN (SELECT DISTINCT(tenant_code) FROM tenant_details) AND created_at BETWEEN '" + fromDateString + "' AND '" + toDateString + "' AND mobile NOT IN ('+919999900000','+919999911111','+919999999999','+919901033800','+919711903969','+919428140479','+919015238030','+919315974807','+919663265675','+919468283901','+918126148700','+918700789547') GROUP BY tenant_code;"
+		print("unifillDataExportQuery : " + unifillDataExportQuery)
 
-# print("unifillReportQuery : " + unifillReportQuery)
+		mysqlDbCursor.execute(unifillReportQuery)
 
-# try:
-# 	mysqlDbCursor.execute(unifillReportQuery)
+		columnHeadings = "turbo_mobile, address_line1, address_line2, city, district, state_code, country_code, pincode, shipping_package_uc_status, uniware_sp_created, uniware_sp_updated"
+		print(columnHeadings)
 
-# 	columnHeadings = "Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,Date"
-# 	print(columnHeadings)
+		outputFile.write(columnHeadings + "\n")
+		
+		for row in mysqlDbCursor.fetchall():
+			address_details = (
+				"\"" + str(row[0]) + "\"" + 
+				"\"" + str(row[1]) + "\"" + 
+				"\"" + str(row[2]) + "\"" + 
+				"\"" + str(row[3]) + "\"" + 
+				"\"" + str(row[4]) + "\"" + 
+				"\"" + str(row[5]) + "\"" + 
+				"\"" + str(row[6]) + "\"" + 
+				"\"" + str(row[7]) + "\"" + 
+				"\"" + str(row[8]) + "\"" + 
+				"\"" + str(row[9]) + "\"" + 
+				"\"" + str(row[10]) + "\"" + 
+				"\"" + str(row[11]) + "\""
+			)
+			outputFile.write(summary + "\n")
 
-# 	outputFile.write(columnHeadings + "\n")
-	
-# 	for row in mysqlDbCursor.fetchall():
-# 		tenant = row[0]
-# 		totalLookups = row[1]
-# 		lookupsFound = row[2]
-# 		lookupsNotFound = row[3]
-# 		uniqueMobileForLookupsFound = row[4]
-# 		summary = (str(tenant) + "," 
-# 						+ str(totalLookups) + "," 
-# 						+ str(lookupsFound) + "," 
-# 						+ str(lookupsNotFound) + "," 
-# 						+ str(uniqueMobileForLookupsFound) + "," 
-# 						+ toDateString)
-# 		print(summary)
-# 		outputFile.write(summary + "\n")
+	print("-- FINISHED --")
 
-# 	print("-- FINISHED --")
+except Exception as e:
+	print(e)
+	print(sys.exc_info()[0]);
+	print("FAILED");
 
-# except Exception as e:
-# 	print(e)
-# 	print(sys.exc_info()[0]);
-# 	print("FAILED");
-
-# finally:
-# 	mysqlDbClient.close()
-# 	outputFile.close()
+finally:
+	mysqlDbClient.close()
+	outputFile.close()
 
