@@ -1,7 +1,9 @@
 # python3 unifillSalesReport.py
 echo "Unifill data export"
 
-echo $MobileList
+MobileList=$1
+
+echo "Mobile List: $MobileList"
 
 
 # Send mail
