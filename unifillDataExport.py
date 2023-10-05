@@ -65,7 +65,7 @@ try:
 				"\"" + str(row[9]) + "\"" + 
 				"\"" + str(row[10]) + "\"" 
 			)
-			outputFile.write(summary + "\n")
+			outputFile.write(address_details + "\n")
 
 	print("-- FINISHED --")
 
