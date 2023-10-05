@@ -63,8 +63,7 @@ try:
 				"\"" + str(row[7]) + "\"" + 
 				"\"" + str(row[8]) + "\"" + 
 				"\"" + str(row[9]) + "\"" + 
-				"\"" + str(row[10]) + "\"" + 
-				"\"" + str(row[11]) + "\""
+				"\"" + str(row[10]) + "\"" 
 			)
 			outputFile.write(summary + "\n")
 
