@@ -53,16 +53,16 @@ try:
 		
 		for row in mysqlDbCursor.fetchall():
 			address_details = (
-				"\"" + str(row[0]) + "\"" + 
-				"\"" + str(row[1]) + "\"" + 
-				"\"" + str(row[2]) + "\"" + 
-				"\"" + str(row[3]) + "\"" + 
-				"\"" + str(row[4]) + "\"" + 
-				"\"" + str(row[5]) + "\"" + 
-				"\"" + str(row[6]) + "\"" + 
-				"\"" + str(row[7]) + "\"" + 
-				"\"" + str(row[8]) + "\"" + 
-				"\"" + str(row[9]) + "\"" + 
+				"\"" + str(row[0]) + "\"" + "," + 
+				"\"" + str(row[1]) + "\"" + "," + 
+				"\"" + str(row[2]) + "\"" + "," + 
+				"\"" + str(row[3]) + "\"" + "," + 
+				"\"" + str(row[4]) + "\"" + "," + 
+				"\"" + str(row[5]) + "\"" + "," + 
+				"\"" + str(row[6]) + "\"" + "," + 
+				"\"" + str(row[7]) + "\"" + "," + 
+				"\"" + str(row[8]) + "\"" + "," + 
+				"\"" + str(row[9]) + "\"" + "," + 
 				"\"" + str(row[10]) + "\"" 
 			)
 			outputFile.write(address_details + "\n")
