@@ -19,7 +19,7 @@ print("Mobile list: " + mobileListString)
 reportDate = datetime.date.today()
 reportDateString = reportDate.strftime("%Y-%m-%d")
 
-outputFileName = "/tmp/unifill-data-export_" + toDateString  + ".csv"
+outputFileName = "/tmp/unifill-data-export_" + reportDateString  + ".csv"
 mysqlDbUri = "db-slave.address.unicommerce.infra"
 dbName = "turbo"
 
