@@ -1,10 +1,10 @@
-# python3 unifillSalesReport.py
 echo "Unifill data export"
 
 MobileList=$1
 
 echo "Mobile List: $MobileList"
 
+python3 unifillDataExport.py $MobileList
 
 # Send mail
 ls -1 /tmp/unifill-data-export* 
