@@ -44,7 +44,7 @@ try:
 
 		print("unifillDataExportQuery : " + unifillDataExportQuery)
 
-		mysqlDbCursor.execute(unifillReportQuery)
+		mysqlDbCursor.execute(unifillDataExportQuery)
 
 		columnHeadings = "turbo_mobile, address_line1, address_line2, city, district, state_code, country_code, pincode, shipping_package_uc_status, uniware_sp_created, uniware_sp_updated"
 		print(columnHeadings)
