@@ -10,7 +10,7 @@ mobileList = mobileListString.split(",")
 for i in range(0, len(mobileList)):
 	mobileList[i] = "\"" + mobileList[i] + "\""
 
-separator = "\""
+separator = ","
 mobileListString = separator.join(mobileList)	
 print("Mobile list: " + mobileListString)
 
