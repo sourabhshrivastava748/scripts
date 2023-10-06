@@ -28,8 +28,8 @@ dbName = "turbo"
 try: 
 	outputFile = open(outputFileName, "w")
 
-	if (len(mobileList) > 1000) :
-		outputFile.write("At max 1000 mobiles are allowed for data export")
+	if (len(mobileList) > 11000) :
+		outputFile.write("At max 11000 mobiles are allowed for data export")
 
 	else:
 		mysqlDbClient = mysql.connector.connect(
