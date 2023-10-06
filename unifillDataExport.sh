@@ -13,7 +13,7 @@ if [ -z "$reportFilename" ];
 then
     echo "Report file is empty."
 else
-    current_date=$(date +'%d-%b-%Y %H:%M')
+    current_date=$(date +'%Y%m%d%H%M%S')
 
 	MAIL_RECIPIENTS=${EmailRecipientList}
 	MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,bhupi@unicommerce.com"

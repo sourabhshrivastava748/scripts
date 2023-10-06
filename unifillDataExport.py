@@ -24,7 +24,7 @@ print("Mobile list: " + mobileListString)
 
 #---
 reportDate = datetime.date.today()
-reportDateString = reportDate.strftime("%Y-%m-%d")
+reportDateString = reportDate.strftime("%Y%m%d%H%M%S")
 
 outputFileName = "/tmp/unifill-data-export_" + reportDateString  + ".csv"
 mysqlDbUri = "db-slave.address.unicommerce.infra"
@@ -53,7 +53,7 @@ try:
 
 		mysqlDbCursor.execute(unifillDataExportQuery)
 
-		columnHeadings = "turbo_mobile, address_line1, address_line2, city, district, state_code, country_code, pincode, shipping_package_uc_status, uniware_sp_created, uniware_sp_updated"
+		columnHeadings = "mobile, address_line1, address_line2, city, district, state_code, country_code, pincode, sp_status, sp_created, sp_updated"
 		print(columnHeadings)
 
 		outputFile.write(columnHeadings + "\n")
