@@ -9,7 +9,7 @@ if (len(sys.argv) == 1):
 	mobileListFile = open("MobileListFile.txt", "r")
 	mobileListString = mobileListFile.read()
 	mobileListFile.close()
-else if (len(sys.argv) == 2):
+elif (len(sys.argv) == 2):
 	mobileListString = sys.argv[1]
 
 mobileList = mobileListString.split(",")
