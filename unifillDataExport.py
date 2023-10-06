@@ -5,14 +5,12 @@ from collections import Counter
 import mysql.connector
 
 #---
-mobileListString = sys.argv[1]
-
-# if mobileListString is empty, read from file
-if (not mobileListString):
+if (not sys.argv[1]):
 	mobileListFile = open("MobileListFile.txt", "r")
 	mobileListString = mobileListFile.read()
 	mobileListFile.close()
-
+else:
+	mobileListString = sys.argv[1]
 
 mobileList = mobileListString.split(",")
 for i in range(0, len(mobileList)):
