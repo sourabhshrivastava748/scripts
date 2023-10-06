@@ -6,12 +6,21 @@ import mysql.connector
 
 #---
 mobileListString = sys.argv[1]
+
+# if mobileListString is empty, read from file
+if (not mobileListString):
+	mobileListFile = open("MobileListFile.txt", "r")
+	mobileListString = mobileListFile.read()
+	mobileListFile.close()
+
+
 mobileList = mobileListString.split(",")
 for i in range(0, len(mobileList)):
 	mobileList[i] = "\"" + mobileList[i] + "\""
 
 separator = ","
-mobileListString = separator.join(mobileList)	
+mobileListString = separator.join(mobileList)
+
 print("Mobile list: " + mobileListString)
 
 
