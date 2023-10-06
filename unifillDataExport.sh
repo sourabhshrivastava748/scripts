@@ -16,8 +16,8 @@ else
     current_date=$(date +'%d-%b-%Y %H:%M')
 
 	MAIL_RECIPIENTS=${EmailRecipientList}
-	# MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,bhupi@unicommerce.com"
-	MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com"
+	MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,bhupi@unicommerce.com"
+	# MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com"
 
 	BUILD_TRIGGER_BY=$(curl -k --silent ${BUILD_URL}/api/xml | tr '<' '\n' | egrep '^userId>|^userName>' | sed 's/.*>//g' | sed -e '1s/$/ \//g' | tr '\n' ' ')
 
