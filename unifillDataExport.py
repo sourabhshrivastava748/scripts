@@ -5,11 +5,11 @@ from collections import Counter
 import mysql.connector
 
 #---
-if (not sys.argv[1]):
+if (len(sys.argv) == 1):
 	mobileListFile = open("MobileListFile.txt", "r")
 	mobileListString = mobileListFile.read()
 	mobileListFile.close()
-else:
+else if (len(sys.argv) == 2):
 	mobileListString = sys.argv[1]
 
 mobileList = mobileListString.split(",")
