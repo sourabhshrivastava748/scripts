@@ -27,29 +27,19 @@ global tenantMongo
 tenantMongo = MongoClient('mongo1.e1-in.unicommerce.infra:27017', 27017);
 c = MongoClient('common1.mongo.unicommerce.infra:27017', 27017);
 
-
-sampleTenantCode = "hkguardianhealthcareservices1"
+serverName = "HealthKart"
+sampleTenantCode = "hktouchstoneteleservices1"
 sampleTenantDb = tenantMongo[sampleTenantCode];
 
-queryFilter = {"type": "SHIPMENT_LABEL", "name": "Custom template"}
+queryFilter = {"code": "INVOICE_CUSTOM_TEMPLATE"}
 doc = sampleTenantDb.samplePrintTemplate.find_one(queryFilter)
 values = { "$set" : { "template": doc["template"] }}
 
 
-# print("")
-# print("Updating stguat")
-# stguatMongoClient = MongoClient('mongo4.test.unicommerce.infra:27017', 27017)
-# stguatMongoDb = stguatMongoClient["stguat"]
-# stguatQuery = {"sourabh" : "test"}
-# values = {"$set" : {"template": doc["template"] }}
-# stguatMongoDb.samplePrintTemplate.update_one(stguatQuery, values)
-# print("Done")
-
-
 db= c['uniwareConfig'];
 serverDetails = db["serverDetails"];
-print("Getting details for " + sys.argv[1]);
-server = serverDetails.find_one({"name": sys.argv[1]});
+print("Getting details for " + serverName);
+server = serverDetails.find_one({"name": serverName});
 dbMysql = MySQLdb.connect(server["db"], "developer", "DevelopeR@4#", "uniware");
 cur = dbMysql.cursor();
 cur.execute("SELECT t.code FROM tenant t where status_code = 'ACTIVE'");
