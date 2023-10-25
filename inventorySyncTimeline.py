@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys, datetime, pytz, re
 import UniwareDbUtility 
+import traceback 
 
 
 def getSummary(inventorySyncData, tenantCode, date):
@@ -135,6 +136,7 @@ try:
 except Exception as e:
 	print(e)
 	print(sys.exc_info()[0]);
+	traceback.print_exc()
 	print("FAILED");
 
 finally:
