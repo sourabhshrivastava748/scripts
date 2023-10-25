@@ -16,7 +16,7 @@ def getSummary(inventorySyncData, tenantCode, date):
 			str(data["totalCit"]) + "," +
 			str(data["markDirtyTimePerCit"]) + "," +
 			str(data["channelSyncTimePerCit"]) + "," +
-			date)
+			date + "\n")
 
 	return summary
 
@@ -181,13 +181,13 @@ try:
 
 				inventorySyncData = list(mycol.aggregate(aggregationSteps))
 
-				print("Inventory sync data: ")
-				print(inventorySyncData)		
+				# print("Inventory sync data: ")
+				# print(inventorySyncData)		
 
 				# Get Summary
-				# summary = getSummary(inventorySyncData, tenant, str(reportDateStr))
+				summary = getSummary(inventorySyncData, tenant, str(reportDateStr))
 				# print(summary)
-				# outputFile.write(summary + "\n")
+				outputFile.write(summary + "\n")
 
 		except Exception as e:
 			print("Exception while calculating uf data for tenant: " + tenant['code'])
