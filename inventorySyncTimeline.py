@@ -133,6 +133,36 @@ try:
 				    }
 				  },
 				  {
+				    "$group": {
+				      "_id": "$requestIdentifier",
+				      "totalMarkDirtyTimeInSeconds": {
+				        "$sum": {
+				          "$divide": [
+				            { "$subtract": ["$citMarkDirtyTime", "$itisUnacknowledgedTime"] },
+				            1000
+				          ]
+				        }
+				      },
+				      "totalChannelSyncTimeInSeconds": {
+				        "$sum": {
+				          "$divide": [
+				            { "$subtract": ["$created", "$citMarkDirtyTime"] },
+				            1000
+				          ]
+				        }
+				      },
+				      "totalTimeInSeconds": {
+				        "$sum": {
+				          "$divide": [
+				            { "$subtract": ["$created", "$itisUnacknowledgedTime"] },
+				            1000
+				          ]
+				        }
+				      },
+				      "totalCit": { "$sum": 1 }
+				    }
+				  },
+				  {
 				    "$count": "requestIdentifier"  
 				  }
 				]
