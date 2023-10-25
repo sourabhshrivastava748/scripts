@@ -123,8 +123,8 @@ try:
 				  {
 				    "$match": {
 				      "created": {
-				        "$gte": ISODate("2023-10-23T00:00:00.000Z"),
-				        "$lte": ISODate("2023-10-23T23:59:59.999Z")
+				        "$gte": utcMidnightDateTime_yesterday,
+				        "$lte": utcMidnightDateTime_today
 				      },
 				      "itisUnacknowledgedTime": { "$exists": true },
 				      "calculatedInventory": {
@@ -133,7 +133,7 @@ try:
 				    }
 				  },
 				  {
-				    $count: "requestIdentifier"  
+				    "$count": "requestIdentifier"  
 				  }
 				]
 
