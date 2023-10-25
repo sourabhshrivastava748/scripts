@@ -126,7 +126,7 @@ try:
 				        "$gte": utcMidnightDateTime_yesterday,
 				        "$lte": utcMidnightDateTime_today
 				      },
-				      "itisUnacknowledgedTime": { "$exists": true },
+				      "itisUnacknowledgedTime": { "$exists": "true" },
 				      "calculatedInventory": {
 				        "$lt": 5
 				      }
