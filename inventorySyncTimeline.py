@@ -74,8 +74,8 @@ try:
 				  },
 				  {
 				    "$group": {
-				      _id: "$requestIdentifier",
-				      totalMarkDirtyTimeInSeconds: {
+				      "_id": "$requestIdentifier",
+				      "totalMarkDirtyTimeInSeconds": {
 				        "$sum": {
 				          "$divide": [
 				            { "$subtract": ["$citMarkDirtyTime", "$itisUnacknowledgedTime"] },
