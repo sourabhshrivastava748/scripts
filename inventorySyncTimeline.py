@@ -163,14 +163,26 @@ try:
 				    }
 				  },
 				  {
-				    "$count": "requestIdentifier"  
+				    "$project": {
+				      "requestIdentifier": "$_id",
+				      "totalMarkDirtyTimeInSeconds": "$totalMarkDirtyTimeInSeconds",
+				      "totalChannelSyncTimeInSeconds": "$totalChannelSyncTimeInSeconds",
+				      "totalTimeInSeconds": "$totalTimeInSeconds",
+				      "totalCit": "$totalCit",
+				      "markDirtyTimePerCit": {
+				        "$divide": ["$totalMarkDirtyTimeInSeconds", "$totalCit"]
+				      },
+				      "channelSyncTimePerCit": {
+				        "$divide": ["$totalChannelSyncTimeInSeconds", "$totalCit"]
+				      }
+				    }
 				  }
 				]
 
 				inventorySyncData = list(mycol.aggregate(aggregationSteps))
 
 				print("Inventory sync data: ")
-				print(str(inventorySyncData))		
+				print(inventorySyncData)		
 
 				# Get Summary
 				# summary = getSummary(inventorySyncData, tenant, str(reportDateStr))
