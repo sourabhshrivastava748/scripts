@@ -59,66 +59,6 @@ try:
 				mycol = mydb[colName]
 
 				# Get inventory sync data
-				# aggregationSteps = [
-				#   {
-				#     "$match": {
-				#       "created": {
-				#         "$gte": utcMidnightDateTime_yesterday,
-				#         "$lte": utcMidnightDateTime_today
-				#       },
-				#       "itisUnacknowledgedTime": { "$exists": "true" },
-				#       "calculatedInventory": {
-				#         "$lt": "5"
-				#       }
-				#     }
-				#   },
-				#   {
-				#     "$group": {
-				#       "_id": "$requestIdentifier",
-				#       "totalMarkDirtyTimeInSeconds": {
-				#         "$sum": {
-				#           "$divide": [
-				#             { "$subtract": ["$citMarkDirtyTime", "$itisUnacknowledgedTime"] },
-				#             1000
-				#           ]
-				#         }
-				#       },
-				#       "totalChannelSyncTimeInSeconds": {
-				#         "$sum": {
-				#           "$divide": [
-				#             { "$subtract": ["$created", "$citMarkDirtyTime"] },
-				#             1000
-				#           ]
-				#         }
-				#       },
-				#       "totalTimeInSeconds": {
-				#         "$sum": {
-				#           "$divide": [
-				#             { "$subtract": ["$created", "$itisUnacknowledgedTime"] },
-				#             1000
-				#           ]
-				#         }
-				#       },
-				#       "totalCit": { "$sum": 1 }
-				#     }
-				#   },
-				#   {
-				#     "$project": {
-				#       "requestIdentifier": "$_id",
-				#       "totalMarkDirtyTimeInSeconds": "$totalMarkDirtyTimeInSeconds",
-				#       "totalChannelSyncTimeInSeconds": "$totalChannelSyncTimeInSeconds",
-				#       "totalTimeInSeconds": "$totalTimeInSeconds",
-				#       "totalCit": "$totalCit",
-				#       "markDirtyTimePerCit": {
-				#         "$divide": ["$totalMarkDirtyTimeInSeconds", "$totalCit"]
-				#       },
-				#       "channelSyncTimePerCit": {
-				#         "$divide": ["$totalChannelSyncTimeInSeconds", "$totalCit"]
-				#       }
-				#     }
-				#   }
-				# ]
-
 				aggregationSteps = [
 				  {
 				    "$match": {
