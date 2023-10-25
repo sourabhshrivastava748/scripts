@@ -118,7 +118,10 @@ try:
 				  }
 				]
 
-				inventorySyncData = list(mycol.aggregate(aggregationSteps)) 			
+				inventorySyncData = list(mycol.aggregate(aggregationSteps))
+
+				print("Inventory sync data: ")
+				print(str(inventorySyncData))		
 
 				# Get Summary
 				summary = getSummary(inventorySyncData, tenant, str(reportDateStr))
