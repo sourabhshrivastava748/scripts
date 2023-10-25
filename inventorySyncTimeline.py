@@ -7,14 +7,14 @@ def getSummary(inventorySyncData, tenantCode, date):
 	summary = ""
 	for data in inventorySyncData:
 		summary += (
-			tenantCode + ","
-			data["requestIdentifier"] + "," 
-			data["totalMarkDirtyTimeInSeconds"] + "," 
-			data["totalChannelSyncTimeInSeconds"] + "," 
-			data["totalTimeInSeconds"] + "," 
-			data["totalCit"] + "," 
-			data["markDirtyTimePerCit"] + "," 
-			data["channelSyncTimePerCit"] + "," 
+			tenantCode + "," +
+			data["requestIdentifier"] + "," +
+			data["totalMarkDirtyTimeInSeconds"] + "," +
+			data["totalChannelSyncTimeInSeconds"] + "," +
+			data["totalTimeInSeconds"] + "," +
+			data["totalCit"] + "," +
+			data["markDirtyTimePerCit"] + "," +
+			data["channelSyncTimePerCit"] + "," +
 			date)
 
 	return summary
