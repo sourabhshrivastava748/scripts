@@ -7,7 +7,7 @@ import mysql.connector
 
 
 # FromDate : First day of the month (based on yesterday's date) 
-fromDate = datetime.date.today() - datetime.timedelta(days = 2)
+fromDate = datetime.date.today() - datetime.timedelta(days = 1)
 fromDateString = fromDate.strftime("%Y-%m-%d")
 
 # ToDate for the report
