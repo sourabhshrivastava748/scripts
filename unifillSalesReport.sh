@@ -29,8 +29,8 @@ elif [ "$#" -eq 3 ]; then
     python3 unifillSalesReport-Parameterized.py "$1" "$2" 
 
     reportFileString="unifill-sales-report_${1}_to_${2}.csv"
-    ls -1 ${reportFileString}
-    reportFilename=`ls -1t ${reportFileString} | head -1`
+    ls -1 /tmp/${reportFileString}
+    reportFilename=`ls -1t /tmp/${reportFileString} | head -1`
     echo "Report file: ${reportFilename}"
 
     MAIL_RECIPIENTS="$3"
