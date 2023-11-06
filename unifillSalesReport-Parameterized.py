@@ -40,7 +40,7 @@ print("unifillReportQuery : " + unifillReportQuery)
 try:
 	mysqlDbCursor.execute(unifillReportQuery)
 
-	columnHeadings = "Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,Date"
+	columnHeadings = "Tenant,TotalLookups,LookupsFound,LookupsNotFound,UniqueMobileForLookupsFound,FromDate(inclusive),ToDate(exclusive)"
 	print(columnHeadings)
 
 	outputFile.write(columnHeadings + "\n")
@@ -56,6 +56,7 @@ try:
 						+ str(lookupsFound) + "," 
 						+ str(lookupsNotFound) + "," 
 						+ str(uniqueMobileForLookupsFound) + "," 
+						+ fromDateString + "," 
 						+ toDateString)
 		print(summary)
 		outputFile.write(summary + "\n")
