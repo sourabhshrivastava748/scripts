@@ -49,13 +49,15 @@ def getDetails(ufData, tenantCode):
 	
 	if (len(ufData)>0):
 		for theDetail in ufData:
-			print(theDetail)
-			print("\n")
+			facilityCode = ""
+			if 'facilityAllocatorData' in theDetail.keys():
+				facilityCode = theDetail["facilityAllocatorData"]["facilityCode"]
+
 			unfTS=theDetail["unfulfillableTimeStamp"].strftime("%d/%m/%Y")
 			details = details + (tenantCode + "," 
 				+ theDetail["saleOrderCode"] +"," 
 				+ theDetail["saleOrderItemCode"] + "," 
-				+ theDetail["facilityAllocatorData"]["facilityCode"] + ","
+				+ facilityCode + ","
 				+ theDetail["channelSourceCode"]+","
 				+ theDetail["summary"]+","
 				+ unfTS+"\n")
