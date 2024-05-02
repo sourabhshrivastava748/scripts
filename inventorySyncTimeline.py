@@ -69,7 +69,8 @@ try:
 				      "itisUnacknowledgedTime": { "$exists": "true" },
 				      "calculatedInventory": {
 				        "$lt": 5
-				      }
+				      },
+				      "channelCode" : "SAP_HYBRIS"
 				    }
 				  },
 				  {
