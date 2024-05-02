@@ -43,7 +43,7 @@ try:
 	outputFile = open(outputFileName, "w")
 	outputFile.write("Tenant,RequestIdentifier,TotalMarkDirtyTimeInSeconds,TotalChannelSyncTimeInSeconds,TotalTimeInSeconds,TotalCit,MarkDirtyTimePerCit,ChannelSyncTimePerCit,Date\n")
 
-	tenantList = ["tcns"]
+	tenantList = ["fabindialtd"]
 
 	# For all tenants
 	for tenant in tenantList:
