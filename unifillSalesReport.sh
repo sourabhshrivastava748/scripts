@@ -16,7 +16,7 @@ if [ "$#" -eq 0 ]; then
 	cp ${reportFilename2} ./
 
 	ls -al
-	convertCsvToHtml.py > mail-content.html
+	python3 convertCsvToHtml.py > mail-content.html
 
 	yesterday_date=$(date -d "yesterday 13:00" +'%d-%b-%Y')
 
