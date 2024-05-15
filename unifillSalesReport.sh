@@ -4,6 +4,9 @@ if [ "$#" -eq 0 ]; then
     echo "Cron run"
     python3 unifillSalesReport.py
 	python3 unifillSalesReport-DailyUsage.py
+	python3 unifillSalesReport-countApiMtd.py
+	python3 unifillSalesReport-countApiDailyUsage.py
+
 
 	ls -1 /tmp/unifill-mtd-sales-report* 
 	reportFilename=`ls -1t /tmp/unifill-mtd-sales-report* | head -1`
@@ -14,6 +17,16 @@ if [ "$#" -eq 0 ]; then
 	reportFilename2=`ls -1t /tmp/unifill-sales-report-daily-usage* | head -1`
 	echo "Report file 2: ${reportFilename2}"
 	cp ${reportFilename2} ./
+
+	ls -1 /tmp/unifill-count-api-mtd* 
+	reportFilename3=`ls -1t /tmp/unifill-count-api-mtd* | head -1`
+	echo "Report file: ${reportFilename}"
+	cp ${reportFilename3} ./
+
+	ls -1 /tmp/unifill-count-api-daily-usage* 
+	reportFilename4=`ls -1t /tmp/unifill-count-api-daily-usage* | head -1`
+	echo "Report file 2: ${reportFilename2}"
+	cp ${reportFilename4} ./
 
 	ls -al
 	python3 convertCsvToHtml.py > mail-content.html
