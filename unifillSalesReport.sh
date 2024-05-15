@@ -8,21 +8,26 @@ if [ "$#" -eq 0 ]; then
 	ls -1 /tmp/unifill-mtd-sales-report* 
 	reportFilename=`ls -1t /tmp/unifill-mtd-sales-report* | head -1`
 	echo "Report file: ${reportFilename}"
+	cp ${reportFilename} ./
 
 	ls -1 /tmp/unifill-sales-report-daily-usage* 
 	reportFilename2=`ls -1t /tmp/unifill-sales-report-daily-usage* | head -1`
 	echo "Report file 2: ${reportFilename2}"
+	cp ${reportFilename2} ./
+
+	ls -al
+	convertCsvToHtml.py > mail-content.html
 
 	yesterday_date=$(date -d "yesterday 13:00" +'%d-%b-%Y')
 
-	MAIL_RECIPIENTS="turbo@unicommerce.com,anurag.mittal@unicommerce.com,accounts@unicommerce.com,financeteam@unicommerce.com,kapil@unicommerce.com,pramod@unicommerce.com"
+	# MAIL_RECIPIENTS="turbo@unicommerce.com,anurag.mittal@unicommerce.com,accounts@unicommerce.com,financeteam@unicommerce.com,kapil@unicommerce.com,pramod@unicommerce.com"
 
-	# MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
+	MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
 
 	MAIL_SUBJECT="Unifill Sales Report MTD and Daily Usage | ${yesterday_date}"
 	MAIL_CONTENT="Please find the attachment. Report prepared by alpha team."
 
-	echo ${MAIL_CONTENT} | mutt -s "${MAIL_SUBJECT}" -a "${reportFilename}" -a "${reportFilename2}" -- "${MAIL_RECIPIENTS}"
+	cat mail-content.html | mutt -s "${MAIL_SUBJECT}" -a "${reportFilename}" -a "${reportFilename2}" -- "${MAIL_RECIPIENTS}"
 
 elif [ "$#" -eq 3 ]; then
     echo "Manual parameterized run with arguments: $#"
