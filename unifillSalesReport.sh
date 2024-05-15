@@ -27,7 +27,7 @@ if [ "$#" -eq 0 ]; then
 	MAIL_SUBJECT="Unifill Sales Report MTD and Daily Usage | ${yesterday_date}"
 	MAIL_CONTENT="Please find the attachment. Report prepared by alpha team."
 
-	cat mail-content.html | mutt -s "${MAIL_SUBJECT}" -a "${reportFilename}" -a "${reportFilename2}" -- "${MAIL_RECIPIENTS}"
+	mutt -e "set content_type=text/html" -s "${MAIL_SUBJECT}" -a "${reportFilename}" -a "${reportFilename2}" -- "${MAIL_RECIPIENTS}" < mail-content.html
 
 elif [ "$#" -eq 3 ]; then
     echo "Manual parameterized run with arguments: $#"
