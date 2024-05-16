@@ -33,9 +33,9 @@ if [ "$#" -eq 0 ]; then
 
 	yesterday_date=$(date -d "yesterday 13:00" +'%d-%b-%Y')
 
-	# MAIL_RECIPIENTS="turbo@unicommerce.com,anurag.mittal@unicommerce.com,accounts@unicommerce.com,financeteam@unicommerce.com,kapil@unicommerce.com,pramod@unicommerce.com"
+	MAIL_RECIPIENTS="turbo@unicommerce.com,anurag.mittal@unicommerce.com,accounts@unicommerce.com,financeteam@unicommerce.com,kapil@unicommerce.com,pramod@unicommerce.com"
 
-	MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
+	# MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
 
 	MAIL_SUBJECT="Unifill Sales Report MTD and Daily Usage | ${yesterday_date}"
 	MAIL_CONTENT="Please find the attachment. Report prepared by alpha team."
