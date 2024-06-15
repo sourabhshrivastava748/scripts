@@ -33,7 +33,7 @@ if [ "$#" -eq 0 ]; then
 
 	yesterday_date=$(date -d "yesterday 13:00" +'%d-%b-%Y')
 
-	MAIL_RECIPIENTS="turbo@unicommerce.com,anurag.mittal@unicommerce.com,accounts@unicommerce.com,financeteam@unicommerce.com,pramod@unicommerce.com,prince.singhla@unicommerce.com,dharamveer.rathore@unicommerce.com,hariom.jaiswal@unicommerce.com,lalit.sharma@unicommerce.com,arpit.saxena@unicommerce.com"
+	MAIL_RECIPIENTS="turbo@unicommerce.com,anurag.mittal@unicommerce.com,accounts@unicommerce.com,financeteam@unicommerce.com,pramod@unicommerce.com,prince.singhla@unicommerce.com,dharamveer.rathore@unicommerce.com,hariom.jaiswal@unicommerce.com,lalit.sharma@unicommerce.com,arpit.saxena@unicommerce.com,gunjan.marwaha@unicommerce.com"
 
 	# MAIL_RECIPIENTS="sourabh.shrivastava@unicommerce.com"
 
