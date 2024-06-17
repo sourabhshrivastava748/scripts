@@ -52,8 +52,8 @@ unifillReportQuery = """select tenant_code,
 	from 
 		address_count_trace 
 	where 
-		created_at >= '" + fromDateString + "' AND 
-		created_at < '" + todayDateString + "' 
+		created_at >= '""" + fromDateString + """' AND 
+		created_at < '""" + todayDateString + """' 
 	group by 
 		tenant_code"""
 
