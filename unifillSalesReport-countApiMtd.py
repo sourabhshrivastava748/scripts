@@ -49,6 +49,7 @@ mysqlDbCursor = mysqlDbClient.cursor();
 
 unifillReportQuery = """select tenant_code, 
 		count(*) as total_api_hits, 
+		count(distinct(mobile)) as unique_mobile,
 		SUM(CASE WHEN address_count > 0 THEN 1 ELSE 0 END) AS address_found, 
 		SUM(CASE WHEN address_count = 0 THEN 1 ELSE 0 END) AS address_not_found 
 	from 
@@ -64,7 +65,7 @@ print("unifillReportQuery : " + unifillReportQuery)
 try:
 	mysqlDbCursor.execute(unifillReportQuery)
 
-	columnHeadings = "Tenant,TotalApiHits,AddressFound,AddressNotFound,Date"
+	columnHeadings = "Tenant,TotalApiHits,UniqueMobile,AddressFound,AddressNotFound,Date"
 	print(columnHeadings)
 
 	outputFile.write(columnHeadings + "\n")
@@ -72,11 +73,13 @@ try:
 	for row in mysqlDbCursor.fetchall():
 		tenant = row[0]
 		totalApiHits = row[1]
-		addressFound = row[2]
-		addressNotFound = row[3]
+		uniqueMobile = row[2]
+		addressFound = row[3]
+		addressNotFound = row[4]
 
 		summary = (str(tenant) + "," 
 						+ str(totalApiHits) + "," 
+						+ str(uniqueMobile) + "," 
 						+ str(addressFound) + ","
 						+ str(addressNotFound) + ","
 						+ toDateString)
