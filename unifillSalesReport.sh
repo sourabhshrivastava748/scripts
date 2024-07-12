@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit script on failure of any command
+set -e
+
 if [ "$#" -eq 0 ]; then
     echo "Cron run"
     python3 unifillSalesReport.py
