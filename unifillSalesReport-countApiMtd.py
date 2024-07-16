@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys, datetime, pytz, re
+import sys, datetime, re
 from pymongo import MongoClient
 from collections import Counter
 import mysql.connector
