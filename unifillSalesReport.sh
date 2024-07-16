@@ -2,7 +2,6 @@
 
 # Exit script on failure of any command
 set -e
-alias python39='/usr/src/Python-3.9.0/python'
 
 python39 --version
 
