@@ -3,14 +3,14 @@
 # Exit script on failure of any command
 set -e
 
-python39 --version
+python3.9 --version
 
 if [ "$#" -eq 0 ]; then
     echo "Cron run"
-    python39 unifillSalesReport.py
-	python39 unifillSalesReport-DailyUsage.py
-	python39 unifillSalesReport-countApiMtd.py
-	python39 unifillSalesReport-countApiDailyUsage.py
+    python3.9 unifillSalesReport.py
+	python3.9 unifillSalesReport-DailyUsage.py
+	python3.9 unifillSalesReport-countApiMtd.py
+	python3.9 unifillSalesReport-countApiDailyUsage.py
 
 
 	ls -1 /tmp/unifill-mtd-sales-report* 
@@ -34,7 +34,7 @@ if [ "$#" -eq 0 ]; then
 	cp ${reportFilename4} ./
 
 	ls -al
-	python39 convertCsvToHtml.py > mail-content.html
+	python3.9 convertCsvToHtml.py > mail-content.html
 
 	yesterday_date=$(date -d "yesterday 13:00" +'%d-%b-%Y')
 
@@ -49,7 +49,7 @@ if [ "$#" -eq 0 ]; then
 
 elif [ "$#" -eq 3 ]; then
     echo "Manual parameterized run with arguments: $#"
-    python39 unifillSalesReport-Parameterized.py "$1" "$2" 
+    python3.9 unifillSalesReport-Parameterized.py "$1" "$2" 
 
     reportFileString="unifill-sales-report_${1}_to_${2}.csv"
     ls -1 /tmp/${reportFileString}
