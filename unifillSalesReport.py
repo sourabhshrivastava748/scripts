@@ -31,7 +31,7 @@ outputFileName = "/tmp/unifill-mtd-sales-report_" + toDateString  + ".csv"
 outputFile = open(outputFileName, "w")
 
 
-mysqlDbUri = "db.address.unicommerce.infra"
+mysqlDbUri = "db-slave.address.unicommerce.infra"
 dbName = "turbo"
 
 mysqlDbClient = mysql.connector.connect(

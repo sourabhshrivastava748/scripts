@@ -17,7 +17,7 @@ print("toDate: " + toDateString)
 outputFileName = "/tmp/unifill-sales-report_" + fromDateString + "_to_" + toDateString  + ".csv"
 outputFile = open(outputFileName, "w")
 
-mysqlDbUri = "db.address.unicommerce.infra"
+mysqlDbUri = "db-slave.address.unicommerce.infra"
 dbName = "turbo"
 
 mysqlDbClient = mysql.connector.connect(
