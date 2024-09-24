@@ -1,9 +1,5 @@
 echo "Unifill API Address Export"
 
-
-echo "input.csv"
-cat input.csv
-
 python3 getUnifillAddresses.py
 
 # Send mail
@@ -18,8 +14,8 @@ else
     current_date=$(date +'%Y%m%d%H%M%S')
 
 	MAIL_RECIPIENTS=${EmailRecipientList}
-	# MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com,ankur.pratik@unicommerce.com,ankit.jain03@unicommerce.com,bhupi@unicommerce.com"
-	MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com"
+	MAIL_RECIPIENTS_CC="turbo@unicommerce.com"
+	# MAIL_RECIPIENTS_CC="sourabh.shrivastava@unicommerce.com"
 
 	BUILD_TRIGGER_BY=$(curl -k --silent ${BUILD_URL}/api/xml | tr '<' '\n' | egrep '^userId>|^userName>' | sed 's/.*>//g' | sed -e '1s/$/ \//g' | tr '\n' ' ')
 
