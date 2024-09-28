@@ -60,7 +60,8 @@ def getPrimaryClient(uri1):
 
 #			--- Main ----
 
-tenantSpecificMongoHosts : [
+colName = "piiAuditor"
+tenantSpecificMongoHosts = [
 	'mongo2.ril-in.unicommerce.infra',
 	'mongo1.ril-in.unicommerce.infra',
 	'mongo1.myntra-in.unicommerce.infra',
@@ -92,7 +93,6 @@ tenantSpecificMongoHosts : [
 
 
 try:
-	colName = "piiAuditor"
 	queryDate = datetime.datetime(2024, 9, 1, 0, 0, 0)
 
 	outputFileName = "/tmp/pii-auditor-details-27-Sep.csv"
