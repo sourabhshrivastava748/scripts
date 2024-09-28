@@ -37,7 +37,7 @@ def getDetails(piiAuditorData):
 			details = details + (theDetail["tenantCode"] + "," 
 				+ theDetail["userName"] +"," 
 				+ theDetail["actualUsername"] + "," 
-				+ theDetail["ipAddress"] +","
+				# + theDetail["ipAddress"] +","
 				+ theDetail["exportId"] + ","
 				+ theDetail["exportJobTypeName"] + ","
 				+ theDetail["url"] + ","
@@ -97,7 +97,7 @@ try:
 
 	outputFileName = "/tmp/pii-auditor-details-27-Sep.csv"
 	outputFile = open(outputFileName, "w")
-	outputFile.write("tenantCode, userName, actualUsername, ipAddress, exportId, exportJobTypeName, url, completionTime\n")
+	outputFile.write("tenantCode, userName, actualUsername, exportId, exportJobTypeName, url, completionTime\n")
 
 	# mongoUri = ["mongo1.e1-in.unicommerce.infra", "mongo2.e1-in.unicommerce.infra"]
 	# myclient = getClient(mongoUri[0], mongoUri[1])
@@ -132,7 +132,6 @@ try:
 					"tenantCode":1,
 					"userName":1,
 					"actualUsername":1,
-					"ipAddress":1,
 					"exportId":1,
 					"exportJobTypeName":1,
 					"url":1,	
