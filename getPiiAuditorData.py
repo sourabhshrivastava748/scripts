@@ -95,7 +95,10 @@ tenantSpecificMongoHosts = [
 try:
 	queryDate = datetime.datetime(2024, 9, 1, 0, 0, 0)
 
-	outputFileName = "/tmp/pii-auditor-details-27-Sep.csv"
+	current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+	outputFileName = f"/tmp/pii-auditor-details-{current_time}.csv"
+	print("outputFileName" + outputFileName)
+
 	outputFile = open(outputFileName, "w")
 	outputFile.write("tenantCode, userName, actualUsername, exportId, exportJobTypeName, url, completionTime\n")
 
