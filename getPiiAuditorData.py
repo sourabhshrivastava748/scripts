@@ -61,34 +61,35 @@ def getPrimaryClient(uri1):
 #			--- Main ----
 
 tenantSpecificMongoHosts : [
-		"mongo2.ril-in.unicommerce.infra:27017",
-		"mongo1.ril-in.unicommerce.infra:27017",
-		"mongo1.myntra-in.unicommerce.infra",
-		"mongo2.hvc-in.unicommerce.infra",
-		"mongo1.c6-in.unicommerce.infra:27017",
-		"mongo2.e1-in.unicommerce.infra:27017",
-		"mongo2.int-c1.unicommerce.infra:27017",
-		"mongo1.hvc-in.unicommerce.infra",
-		"mongo1.e1-in.unicommerce.infra:27017",
-		"mongo1.e2-in.unicommerce.infra:27017",
-		"mongo4.c2-in.unicommerce.infra:27017",
-		"mongo2.e1-in.unicommerce.infra:2701",
-		"mongo3.c2-in.unicommerce.infra:27017",
-		"mongo6.c1-in.unicommerce.infra:27017",
-		"mongo1.ecloud1-in.unicommerce.infra:27017",
-		"mongo2.e2-in.unicommerce.infra:27017",
-		"mongo5.c1-in.unicommerce.infra:27017",
-		"mongo2.c6-in.unicommerce.infra:27017",
-		"mongo1.int-c1.unicommerce.infra:27017",
-		"mongo2.c3-in.unicommerce.infra:27017",
-		"mongo1.c4-in.unicommerce.infra:27017",
-		"mongo1.int-c2.unicommerce.infra:27017",
-		"mongo2.c4-in.unicommerce.infra:27017",
-		"mongo2.c5-in.unicommerce.infra:27017",
-		"mongo1.c3-in.unicommerce.infra:27017",
-		"mongo1.c5-in.unicommerce.infra:27017",
-		"mongo2.ecloud1-in.unicommerce.infra:27017"
-]
+	'mongo2.ril-in.unicommerce.infra',
+	'mongo1.ril-in.unicommerce.infra',
+	'mongo1.myntra-in.unicommerce.infra',
+	'mongo2.hvc-in.unicommerce.infra',
+	'mongo1.c6-in.unicommerce.infra',
+	'mongo2.e1-in.unicommerce.infra',
+	'mongo2.int-c1.unicommerce.infra',
+	'mongo1.hvc-in.unicommerce.infra',
+	'mongo1.e1-in.unicommerce.infra',
+	'mongo1.e2-in.unicommerce.infra',
+	'mongo4.c2-in.unicommerce.infra',
+	'mongo2.e1-in.unicommerce.infra',
+	'mongo3.c2-in.unicommerce.infra',
+	'mongo6.c1-in.unicommerce.infra',
+	'mongo1.ecloud1-in.unicommerce.infra',
+	'mongo2.e2-in.unicommerce.infra',
+	'mongo5.c1-in.unicommerce.infra',
+	'mongo2.c6-in.unicommerce.infra',
+	'mongo1.int-c1.unicommerce.infra',
+	'mongo2.c3-in.unicommerce.infra',
+	'mongo1.c4-in.unicommerce.infra',
+	'mongo1.int-c2.unicommerce.infra',
+	'mongo2.c4-in.unicommerce.infra',
+	'mongo2.c5-in.unicommerce.infra',
+	'mongo1.c3-in.unicommerce.infra',
+	'mongo1.c5-in.unicommerce.infra',
+	'mongo2.ecloud1-in.unicommerce.infra'
+ ]
+
 
 try:
 	colName = "piiAuditor"
