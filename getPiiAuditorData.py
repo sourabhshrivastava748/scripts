@@ -46,57 +46,106 @@ def getDetails(piiAuditorData):
 	return details;
 
 
+def getPrimaryClient(uri1):
+	try:
+	    c = MongoClient(uri1, 27017);
+	    db= c['uniwareConfig'];
+	    db.test.insert_one({});
+	    print(str(uri1))
+	except:
+	    c = None
+
+	return c
+
+
 #			--- Main ----
+
+tenantSpecificMongoHosts : [
+		"mongo2.ril-in.unicommerce.infra:27017",
+		"mongo1.ril-in.unicommerce.infra:27017",
+		"mongo1.myntra-in.unicommerce.infra",
+		"mongo2.hvc-in.unicommerce.infra",
+		"mongo1.c6-in.unicommerce.infra:27017",
+		"mongo2.e1-in.unicommerce.infra:27017",
+		"mongo2.int-c1.unicommerce.infra:27017",
+		"mongo1.hvc-in.unicommerce.infra",
+		"mongo1.e1-in.unicommerce.infra:27017",
+		"mongo1.e2-in.unicommerce.infra:27017",
+		"mongo4.c2-in.unicommerce.infra:27017",
+		"mongo2.e1-in.unicommerce.infra:2701",
+		"mongo3.c2-in.unicommerce.infra:27017",
+		"mongo6.c1-in.unicommerce.infra:27017",
+		"mongo1.ecloud1-in.unicommerce.infra:27017",
+		"mongo2.e2-in.unicommerce.infra:27017",
+		"mongo5.c1-in.unicommerce.infra:27017",
+		"mongo2.c6-in.unicommerce.infra:27017",
+		"mongo1.int-c1.unicommerce.infra:27017",
+		"mongo2.c3-in.unicommerce.infra:27017",
+		"mongo1.c4-in.unicommerce.infra:27017",
+		"mongo1.int-c2.unicommerce.infra:27017",
+		"mongo2.c4-in.unicommerce.infra:27017",
+		"mongo2.c5-in.unicommerce.infra:27017",
+		"mongo1.c3-in.unicommerce.infra:27017",
+		"mongo1.c5-in.unicommerce.infra:27017",
+		"mongo2.ecloud1-in.unicommerce.infra:27017"
+]
 
 try:
 	colName = "piiAuditor"
-	tenantCode = "pep"
 	queryDate = datetime.datetime(2024, 9, 1, 0, 0, 0)
 
 	outputFileName = "/tmp/pii-auditor-details-27-Sep.csv"
 	outputFile = open(outputFileName, "w")
 	outputFile.write("tenantCode, userName, actualUsername, ipAddress, exportId, exportJobTypeName, url, completionTime\n")
 
-	mongoUri = ["mongo1.e1-in.unicommerce.infra", "mongo2.e1-in.unicommerce.infra"]
-	myclient = getClient(mongoUri[0], mongoUri[1])
+	# mongoUri = ["mongo1.e1-in.unicommerce.infra", "mongo2.e1-in.unicommerce.infra"]
+	# myclient = getClient(mongoUri[0], mongoUri[1])
 
-	database_names = myclient.list_database_names()
-	for db_name in database_names:
-		print("db_name: " + str(db_name))
 
-		mydb = myclient[db_name]
-		mycol = mydb[colName]
+	for mongoHost in tenantSpecificMongoHosts:
+		print("\nmongoHost: " + str(mongoHost))
+		myclient = getPrimaryClient(mongoHost)
 
-		query = {
-			"completionTime" : { 
-				"$gte" : queryDate
-			},
-			"userName": { 
-		        "$regex" : "unicommerce.com$", 
-		        "$options" : "i"  
-		    }
-		}
+		if (myclient is not None):
+			database_names = myclient.list_database_names()
+			for db_name in database_names:
+				print("db_name: " + str(db_name))
 
-		projection = {
-			"tenantCode":1,
-			"userName":1,
-			"actualUsername":1,
-			"ipAddress":1,
-			"exportId":1,
-			"exportJobTypeName":1,
-			"url":1,
-			"completionTime":1
-		}
+				mydb = myclient[db_name]
+				mycol = mydb[colName]
 
-		piiAuditorData = list(mycol.find(query, projection))
-		print("Total data: " + str(len(piiAuditorData)))
-		
-		details = getDetails(piiAuditorData)
+				query = {
+					"completionTime" : { 
+						"$gte" : queryDate
+					},
+					"userName": { 
+				        "$regex" : "unicommerce.com$", 
+				        "$options" : "i"  
+				    }
+				}
+
+				projection = {
+					"tenantCode":1,
+					"userName":1,
+					"actualUsername":1,
+					"ipAddress":1,
+					"exportId":1,
+					"exportJobTypeName":1,
+					"url":1,	
+					"completionTime":1
+				}
+
+				piiAuditorData = list(mycol.find(query, projection))
+				print("Total data: " + str(len(piiAuditorData)))
+
+				if (len(piiAuditorData) > 0):
+					details = getDetails(piiAuditorData)
+					# print("------------")
+					# print(details)
+					# print("------------")
+
+					outputFile.write(details + "\n")
 		print("------------")
-		print(details)
-		print("------------")
-
-		outputFile.write(details + "\n")
 
 except Exception as e:
 		print("Exception while getting piiAuditor data: ")
