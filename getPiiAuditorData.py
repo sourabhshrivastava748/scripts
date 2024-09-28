@@ -51,7 +51,7 @@ def getDetails(piiAuditorData):
 try:
 	colName = "piiAuditor"
 	tenantCode = "pep"
-	queryDate = datetime.datetime(2024, 9, 27, 0, 0, 0)
+	queryDate = datetime.datetime(2024, 9, 1, 0, 0, 0)
 
 	outputFileName = "/tmp/pii-auditor-details-27-Sep.csv"
 	outputFile = open(outputFileName, "w")
@@ -59,33 +59,44 @@ try:
 
 	mongoUri = ["mongo1.e1-in.unicommerce.infra", "mongo2.e1-in.unicommerce.infra"]
 	myclient = getClient(mongoUri[0], mongoUri[1])
-	mydb = myclient[tenantCode]
-	mycol = mydb[colName]
 
-	query = {
-		"completionTime" : { 
-			"$gte" : queryDate
+	database_names = myclient.list_database_names()
+	for db_name in database_names:
+		print("db_name: " + str(db_name))
+
+		mydb = myclient[db_name]
+		mycol = mydb[colName]
+
+		query = {
+			"completionTime" : { 
+				"$gte" : queryDate
+			},
+			"userName": { 
+		        "$regex" : "unicommerce.com$", 
+		        "$options" : "i"  
+		    }
 		}
-	}
 
-	projection = {
-		"tenantCode":1,
-		"userName":1,
-		"actualUsername":1,
-		"ipAddress":1,
-		"exportId":1,
-		"exportJobTypeName":1,
-		"url":1,
-		"completionTime":1
-	}
+		projection = {
+			"tenantCode":1,
+			"userName":1,
+			"actualUsername":1,
+			"ipAddress":1,
+			"exportId":1,
+			"exportJobTypeName":1,
+			"url":1,
+			"completionTime":1
+		}
 
-	piiAuditorData = list(mycol.find(query, projection))
-	details = getDetails(piiAuditorData)
-	print("------------")
-	print(details)
-	print("------------")
+		piiAuditorData = list(mycol.find(query, projection))
+		print("Total data: " + str(len(piiAuditorData)))
+		
+		details = getDetails(piiAuditorData)
+		print("------------")
+		print(details)
+		print("------------")
 
-	outputFile.write(details + "\n")
+		outputFile.write(details + "\n")
 
 except Exception as e:
 		print("Exception while getting piiAuditor data: ")
