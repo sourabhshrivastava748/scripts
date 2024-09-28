@@ -41,7 +41,7 @@ def getDetails(piiAuditorData):
 				+ theDetail["exportId"] + ","
 				+ theDetail["exportJobTypeName"] + ","
 				+ theDetail["url"] + ","
-				+ theDetail["completionTime"] + "\n")
+				+ str(theDetail["completionTime"]) + "\n")
 
 	return details;
 
