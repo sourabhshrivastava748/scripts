@@ -112,7 +112,7 @@ try:
 			for db_name in database_names:
 				print("db_name: " + str(db_name))
 
-				if (db_name is "unistage"):
+				if (db_name == "unistage"):
 					continue
 
 				mydb = myclient[db_name]
