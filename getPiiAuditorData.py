@@ -34,14 +34,25 @@ def getDetails(piiAuditorData):
 	
 	if (len(piiAuditorData)>0):
 		for theDetail in piiAuditorData:
-			details = details + (theDetail["tenantCode"] + "," 
-				+ theDetail["userName"] +"," 
-				+ theDetail["actualUsername"] + "," 
-				# + theDetail["ipAddress"] +","
-				+ theDetail["exportId"] + ","
-				+ theDetail["exportJobTypeName"] + ","
-				+ theDetail["url"] + ","
-				+ str(theDetail["completionTime"]) + "\n")
+			details += (
+		        theDetail.get("tenantCode", "") + "," 
+		        + theDetail.get("userName", "") + "," 
+		        + theDetail.get("actualUsername", "") + "," 
+		        + theDetail.get("exportId", "") + "," 
+		        + theDetail.get("exportJobTypeName", "") + "," 
+		        + theDetail.get("url", "") + "," 
+		        + str(theDetail.get("completionTime", "")) + "\n"
+		    )
+
+
+			# details = details + (theDetail["tenantCode"] + "," 
+			# 	+ theDetail["userName"] +"," 
+			# 	+ theDetail["actualUsername"] + "," 
+			# 	# + theDetail["ipAddress"] +","
+			# 	+ theDetail["exportId"] + ","
+			# 	+ theDetail["exportJobTypeName"] + ","
+			# 	+ theDetail["url"] + ","
+			# 	+ str(theDetail["completionTime"]) + "\n")
 
 	return details;
 
