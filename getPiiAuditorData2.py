@@ -137,40 +137,40 @@ def getPrimaryClient(uri1):
 #			--- Main ----
 
 colName = "piiAuditor"
-tenantSpecificMongoHosts = [
-	'mongo2.ril-in.unicommerce.infra',
-	'mongo1.ril-in.unicommerce.infra',
-	'mongo1.myntra-in.unicommerce.infra',
-	'mongo2.hvc-in.unicommerce.infra',
-	'mongo1.c6-in.unicommerce.infra',
-	'mongo2.e1-in.unicommerce.infra',
-	'mongo2.int-c1.unicommerce.infra',
-	'mongo1.hvc-in.unicommerce.infra',
-	'mongo1.e1-in.unicommerce.infra',
-	'mongo1.e2-in.unicommerce.infra',
-	'mongo4.c2-in.unicommerce.infra',
-	'mongo2.e1-in.unicommerce.infra',
-	'mongo3.c2-in.unicommerce.infra',
-	'mongo6.c1-in.unicommerce.infra',
-	'mongo1.ecloud1-in.unicommerce.infra',
-	'mongo2.e2-in.unicommerce.infra',
-	'mongo5.c1-in.unicommerce.infra',
-	'mongo2.c6-in.unicommerce.infra',
-	'mongo1.int-c1.unicommerce.infra',
-	'mongo2.c3-in.unicommerce.infra',
-	'mongo1.c4-in.unicommerce.infra',
-	'mongo1.int-c2.unicommerce.infra',
-	'mongo2.c4-in.unicommerce.infra',
-	'mongo2.c5-in.unicommerce.infra',
-	'mongo1.c3-in.unicommerce.infra',
-	'mongo1.c5-in.unicommerce.infra',
-	'mongo2.ecloud1-in.unicommerce.infra'
- ]
-
 # tenantSpecificMongoHosts = [
+# 	'mongo2.ril-in.unicommerce.infra',
+# 	'mongo1.ril-in.unicommerce.infra',
+# 	'mongo1.myntra-in.unicommerce.infra',
+# 	'mongo2.hvc-in.unicommerce.infra',
+# 	'mongo1.c6-in.unicommerce.infra',
+# 	'mongo2.e1-in.unicommerce.infra',
+# 	'mongo2.int-c1.unicommerce.infra',
+# 	'mongo1.hvc-in.unicommerce.infra',
 # 	'mongo1.e1-in.unicommerce.infra',
-# 	'mongo1.e2-in.unicommerce.infra'
-# ]
+# 	'mongo1.e2-in.unicommerce.infra',
+# 	'mongo4.c2-in.unicommerce.infra',
+# 	'mongo2.e1-in.unicommerce.infra',
+# 	'mongo3.c2-in.unicommerce.infra',
+# 	'mongo6.c1-in.unicommerce.infra',
+# 	'mongo1.ecloud1-in.unicommerce.infra',
+# 	'mongo2.e2-in.unicommerce.infra',
+# 	'mongo5.c1-in.unicommerce.infra',
+# 	'mongo2.c6-in.unicommerce.infra',
+# 	'mongo1.int-c1.unicommerce.infra',
+# 	'mongo2.c3-in.unicommerce.infra',
+# 	'mongo1.c4-in.unicommerce.infra',
+# 	'mongo1.int-c2.unicommerce.infra',
+# 	'mongo2.c4-in.unicommerce.infra',
+# 	'mongo2.c5-in.unicommerce.infra',
+# 	'mongo1.c3-in.unicommerce.infra',
+# 	'mongo1.c5-in.unicommerce.infra',
+# 	'mongo2.ecloud1-in.unicommerce.infra'
+#  ]
+
+tenantSpecificMongoHosts = [
+	'mongo1.e1-in.unicommerce.infra',
+	'mongo1.e2-in.unicommerce.infra'
+]
 
 
 fromDate = datetime.date.today() - datetime.timedelta(days = 7)
