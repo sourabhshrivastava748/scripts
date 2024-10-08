@@ -97,7 +97,7 @@ def find_multiple_tenants_combined(csv_file_path):
     print(df)
 
     # Clean df
-    df = df.dropna(subset=['ipAddress', 'actualUsername'])
+    # df = df.dropna(subset=['ipAddress', 'actualUsername'])
     df = df[(df['ipAddress'].astype(bool)) & (df['actualUsername'].astype(bool))]
 
     # Group by ipAddress and aggregate unique tenantCodes
