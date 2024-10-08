@@ -159,10 +159,10 @@ colName = "piiAuditor"
 # 	'mongo2.ecloud1-in.unicommerce.infra'
 #  ]
 
- tenantSpecificMongoHosts = [
+tenantSpecificMongoHosts = [
 	'mongo1.e1-in.unicommerce.infra',
 	'mongo1.e2-in.unicommerce.infra'
- ]
+]
 
 
 fromDate = datetime.date.today() - datetime.timedelta(days = 7)
