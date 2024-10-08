@@ -95,13 +95,17 @@ def find_multiple_tenants_combined(csv_file_path):
     # Read the CSV file into a DataFrame
     df = pd.read_csv(csv_file_path)
     print(df)
-    
+
+    # Clean df
+    df = df.dropna(subset=['ipAddress', 'actualUsername'])
+    df = df[(df['ipAddress'].astype(bool)) & (df['actualUsername'].astype(bool))]
+
     # Group by ipAddress and aggregate unique tenantCodes
     ip_groups = df.groupby('ipAddress')['tenantCode'].nunique()
     ip_addresses_with_multiple_tenants = ip_groups[ip_groups > 1].index.tolist()
     
     # Group by userName and aggregate unique tenantCodes
-    user_groups = df.groupby('userName')['tenantCode'].nunique()
+    user_groups = df.groupby('actualUsername')['tenantCode'].nunique()
     usernames_with_multiple_tenants = user_groups[user_groups > 1].index.tolist()
     
     # Combine the two lists
