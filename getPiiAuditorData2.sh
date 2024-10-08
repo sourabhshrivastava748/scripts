@@ -2,7 +2,7 @@ set -e
 
 echo "PII Auditor Data Export"
 
-python3 getPiiAuditorData.py
+python3 getPiiAuditorData2.py
 
 # Send mail
 ls -1 /tmp/pii-auditor-details* 
