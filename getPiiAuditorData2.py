@@ -216,8 +216,8 @@ try:
 					print("------------")
 					print(suspiciousUsers)
 					print("------------")
-
-					suspiciousUserOutputFile.write.write(suspiciousUsers+ "\n")
+					if not suspiciousUsers.strip():
+						suspiciousUserOutputFile.write(suspiciousUsers+ "\n")
 
 
 
