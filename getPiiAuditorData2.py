@@ -141,10 +141,13 @@ try:
 	fromDate = datetime.date.today() - datetime.timedelta(days = 7)
 	fromDateString = fromDate.strftime("%d-%m-%Y")
 	print("fromDateString: " + fromDateString)
+	fromDateTime = datetime.datetime.combine(fromDate, datetime.datetime.min.time())
 
 	toDate = datetime.date.today()
 	toDateString = toDate.strftime("%d-%m-%Y")
 	print("toDateString: " + toDateString)
+
+
 
 
 	outputFileName = f"/tmp/pii-auditor-details_{fromDateString}_to_{toDateString}.csv"
@@ -181,7 +184,7 @@ try:
 
 				query = {
 					"completionTime" : { 
-						"$gte" : fromDate
+						"$gte" : fromDateTime
 					}
 				}
 
