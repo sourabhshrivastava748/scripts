@@ -94,6 +94,10 @@ def getDetails(piiAuditorData):
 def find_multiple_tenants_combined(csv_file_path):
     # Read the CSV file into a DataFrame
     df = pd.read_csv(csv_file_path)
+    pd.set_option('display.max_columns', None)
+    print("\nDataFrame columns:")
+    print(df.columns)
+    print("\nDataFrame:")
     print(df)
 
     # Clean df
@@ -187,7 +191,7 @@ print("suspiciousUserOfn" + suspiciousUserOfn)
 
 
 outputFile = open(outputFileName, "w")
-outputFile.write("tenantCode, userName, actualUsername, ipAddress, exportId, exportJobTypeName, url, completionTime\n")
+outputFile.write("tenantCode,userName,actualUsername,ipAddress,exportId,exportJobTypeName,url,completionTime\n")
 
 suspiciousUserOutputFile = open(suspiciousUserOfn, "w")
 suspiciousUserOutputFile.write("ip_username_with_multiple_tenants\n")
