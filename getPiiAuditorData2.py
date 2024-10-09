@@ -7,14 +7,13 @@ import pandas as pd
 
 ###
 # piiAuditor
-# 	- tenantCode
-# 	- userName
-# 	- actualUsername
-# 	- ipAddress
-# 	- exportId
-# 	- exportJobTypeName
-# 	- url
-# 	- completionTime
+# - ipAddress
+# - actualUsername
+# - tenantCode
+# - exportJobTypeName
+# - exportFilterList
+
+
 ###
 
 
@@ -38,14 +37,11 @@ def getDetails(piiAuditorData):
 	if (len(piiAuditorData)>0):
 		for theDetail in piiAuditorData:
 			row = (
-		        theDetail.get("tenantCode", "") + "," 
-		        + theDetail.get("userName", "") + "," 
+		        theDetail.get("ipAddress", "") + "," 
 		        + theDetail.get("actualUsername", "") + "," 
-		        + theDetail.get("ipAddress", "") + "," 
-		        + theDetail.get("exportId", "") + "," 
+		        + theDetail.get("tenantCode", "") + "," 
 		        + theDetail.get("exportJobTypeName", "") + "," 
-		        + theDetail.get("url", "") + "," 
-		        + str(theDetail.get("completionTime", "")) + "\n"
+		        + theDetail.get("exportFilterList", "") + "\n"
 		    )
 
 			details += row
@@ -53,71 +49,45 @@ def getDetails(piiAuditorData):
 	return details;
 
 
-# def find_ip_with_multiple_tenants(piiAuditorData):
-#     # Dictionary to store ipAddress -> set of tenantCodes
-#     ip_to_tenant_codes = defaultdict(set)
 
-#     # Populate the dictionary
-#     for theDetail in piiAuditorData:
-#         ip = theDetail.get("ipAddress", "")
-#         tenant_code = theDetail.get("tenantCode", "")
-        
-#         if ip and tenant_code:  # Ensure both ipAddress and tenantCode are not empty
-#             ip_to_tenant_codes[ip].add(tenant_code)
-
-#     # Find ipAddresses with more than one distinct tenantCode
-#     ip_addresses = [ip for ip, tenant_codes in ip_to_tenant_codes.items() if len(tenant_codes) > 1]
-
-#     return "\n".join(ip_addresses)
-
-
-# def find_user_with_multiple_tenants(piiAuditorData):
-#     # Dictionary to store actualUsername -> set of tenantCodes
-#     user_to_tenant_codes = defaultdict(set)
-
-#     # Populate the dictionary
-#     for theDetail in piiAuditorData:
-#         user = theDetail.get("actualUsername", "")
-#         tenant_code = theDetail.get("tenantCode", "")
-        
-#         if user and tenant_code:  # Ensure both actualUsername and tenantCode are not empty
-#             user_to_tenant_codes[user].add(tenant_code)
-
-#     # Find actualUsernames with more than one distinct tenantCode
-#     usernames = [user for user, tenant_codes in user_to_tenant_codes.items() if len(tenant_codes) > 1]
-
-#     # Join the usernames with newlines
-#     return "\n".join(usernames)
-
-
-
-def find_multiple_tenants_combined(csv_file_path):
+def find_multiple_tenants_combined(csv_file_path, output_csv_path):
     # Read the CSV file into a DataFrame
     df = pd.read_csv(csv_file_path)
-    # pd.set_option('display.max_columns', None)
-    # print("\nDataFrame columns:")
-    # print(df.columns)
-    # print("\nDataFrame:")
-    # print(df)
 
-    # Clean df
+    # Clean df: Drop rows where ipAddress or actualUsername is NaN or empty
     df = df.dropna(subset=['ipAddress', 'actualUsername'])
     df = df[(df['ipAddress'].astype(bool)) & (df['actualUsername'].astype(bool))]
 
-    # Group by ipAddress and aggregate unique tenantCodes
-    ip_groups = df.groupby('ipAddress')['tenantCode'].nunique()
-    ip_addresses_with_multiple_tenants = ip_groups[ip_groups > 1].index.tolist()
-    
-    # Group by userName and aggregate unique tenantCodes
-    user_groups = df.groupby('actualUsername')['tenantCode'].nunique()
-    usernames_with_multiple_tenants = user_groups[user_groups > 1].index.tolist()
-    
-    # Combine the two lists
-    combined_list = ip_addresses_with_multiple_tenants + usernames_with_multiple_tenants
+    # Group by ipAddress and aggregate unique tenantCodes and the list of tenantCodes
+    ip_df = df.groupby('ipAddress').agg(
+        tenantCode_count=('tenantCode', 'nunique'),
+        tenantCodes_list=('tenantCode', lambda x: ', '.join(x.unique()))
+    ).reset_index()
 
-    combined_string = "\n".join(combined_list)
-    
-    return combined_string
+    # Filter for ipAddresses with more than one tenantCode
+    ip_df = ip_df[ip_df['tenantCode_count'] > 1]
+
+    # Group by actualUsername and aggregate unique tenantCodes and the list of tenantCodes
+    user_df = df.groupby('actualUsername').agg(
+        tenantCode_count=('tenantCode', 'nunique'),
+        tenantCodes_list=('tenantCode', lambda x: ', '.join(x.unique()))
+    ).reset_index()
+
+    # Filter for actualUsernames with more than one tenantCode
+    user_df = user_df[user_df['tenantCode_count'] > 1]
+
+    # Combine the two DataFrames
+    combined_df = pd.concat([ip_df.rename(columns={'ipAddress': 'identifier'}),
+                             user_df.rename(columns={'actualUsername': 'identifier'})])
+
+    print("Combined df")
+    print(combined_df)
+
+    # Save the combined DataFrame to a CSV file
+    combined_df.to_csv(output_csv_path, index=False)
+
+    print(f"CSV file with IP addresses and usernames having multiple tenant codes saved to {output_csv_path}")
+
 
 
 
@@ -191,10 +161,10 @@ print("suspiciousUserOfn" + suspiciousUserOfn)
 
 
 outputFile = open(outputFileName, "w")
-outputFile.write("tenantCode,userName,actualUsername,ipAddress,exportId,exportJobTypeName,url,completionTime\n")
+outputFile.write("ipAddress,actualUsername,tenantCode,exportJobTypeName,exportFilterList\n")
 
-suspiciousUserOutputFile = open(suspiciousUserOfn, "w")
-suspiciousUserOutputFile.write("ip_username_with_multiple_tenants\n")
+# suspiciousUserOutputFile = open(suspiciousUserOfn, "w")
+# suspiciousUserOutputFile.write("ip_username_with_multiple_tenants\n")
 
 
 
@@ -224,14 +194,11 @@ try:
 				}
 
 				projection = {
-					"tenantCode":1,
-					"userName":1,
+					"ipAddress":1,
 					"actualUsername":1,
-					"ipAddress": 1,
-					"exportId":1,
-					"exportJobTypeName":1,
-					"url":1,
-					"completionTime":1
+					"tenantCode":1,
+					"exportJobTypeName": 1,
+					"exportFilterList":1
 				}
 
 				piiAuditorData = list(mycol.find(query, projection))
@@ -260,11 +227,8 @@ finally:
 
 
 try:
-	suspiciousUsers = find_multiple_tenants_combined(outputFileName)
-	# print("------------")
-	# print(suspiciousUsers)
-	# print("------------")
-	suspiciousUserOutputFile.write(suspiciousUsers+ "\n")
+	find_multiple_tenants_combined(outputFileName, suspiciousUserOfn)
+	
 
 except Exception as e:
 	print("Exception while getting piiAuditor data: ")
