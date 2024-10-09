@@ -41,7 +41,7 @@ def getDetails(piiAuditorData):
 		        + theDetail.get("actualUsername", "") + "," 
 		        + theDetail.get("tenantCode", "") + "," 
 		        + theDetail.get("exportJobTypeName", "") + "," 
-		        + theDetail.get("exportFilterList", "") + "\n"
+		        + "\"" + theDetail.get("exportFilterList", "").replace("\\", "").replace("\"", "") + "\"" + "\n"
 		    )
 
 			details += row
